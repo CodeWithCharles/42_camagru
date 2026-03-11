@@ -17,8 +17,8 @@ uploads/
 *.log
 
 # EF Core migrations (keep source, ignore generated files)
-src/Camagru.Infrastructure/Persistence/Migrations/*Snapshot.cs
-src/Camagru.Infrastructure/Persistence/Migrations/*Designer.cs
+src/Camagru.Infrastructure/Persistence/Migrations/**Snapshot.cs
+src/Camagru.Infrastructure/Persistence/Migrations/**.Designer.cs
 
 # Image uploads
 src/Camagru.Web/wwwroot/uploads/
