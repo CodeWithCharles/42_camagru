@@ -1,0 +1,43 @@
+# Environment variables
+.env
+!.env.example
+
+# .NET build output
+bin/
+obj/
+*.user
+*.suo
+*.vs/
+*.vscode/
+*.DS_Store
+
+# Docker artifacts
+db_data/
+uploads/
+*.log
+
+# EF Core migrations (keep source, ignore generated files)
+src/Camagru.Infrastructure/Persistence/Migrations/*Snapshot.cs
+src/Camagru.Infrastructure/Persistence/Migrations/*Designer.cs
+
+# Image uploads
+src/Camagru.Web/wwwroot/uploads/
+
+# Test results
+TestResults/
+*.coverage
+*.coveragexml
+
+# Rider/JetBrains IDE
+.idea/
+
+# VS Code settings
+.vscode/
+
+# OS files
+Thumbs.db
+.DS_Store
+
+# NuGet packages
+*.nupkg
+packages/

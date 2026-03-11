@@ -1,0 +1,8 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/Camagru.Application/Camagru.Application.csproj" />
+    <Project Path="src/Camagru.Domain/Camagru.Domain.csproj" />
+    <Project Path="src/Camagru.Infrastructure/Camagru.Infrastructure.csproj" />
+    <Project Path="src/Camagru.Web/Camagru.Web.csproj" />
+  </Folder>
+</Solution>
