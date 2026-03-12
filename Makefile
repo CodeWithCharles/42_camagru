@@ -23,5 +23,5 @@ down:
 	docker compose down
 
 up:
-	mkdir -p uploads db_data
+	mkdir -p uploads
 	docker compose up --build

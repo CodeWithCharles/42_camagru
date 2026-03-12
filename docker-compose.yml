@@ -7,12 +7,19 @@ services:
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
     volumes:
-      - ./db_data:/var/lib/postgresql/data
+      - db_data:/var/lib/postgresql/data
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER}"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  mailpit:
+    image: axllent/mailpit
+    restart: always
+    ports:
+      - "1025:1025"  # SMTP server
+      - "8025:8025"  # Web UI
 
   web:
     build:
@@ -36,5 +43,12 @@ services:
     depends_on:
       db:
         condition: service_healthy
+      mailpit:
+        condition: service_healthy
     volumes:
       - ./uploads:/app/wwwroot/uploads
+      - data_protection_keys:/root/.aspnet/DataProtection-Keys
+
+volumes:
+  db_data:
+  data_protection_keys:
