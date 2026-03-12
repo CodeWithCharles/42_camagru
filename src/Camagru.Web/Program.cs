@@ -1,7 +1,6 @@
 using Camagru.Domain.Interfaces;
 using Camagru.Infrastructure.Persistence;
 using Camagru.Infrastructure.Persistence.Init;
-using Camagru.Infrastructure.Persistence.Repositories;
 using Camagru.Web.Options;
 using Microsoft.EntityFrameworkCore;
 
@@ -31,12 +30,6 @@ var postgresOptions = new PostgresOptions
 // Register DbContext
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseNpgsql(postgresOptions.ToConnectionString()));
-
-// Register repositories
-builder.Services.AddScoped<IUserRepository, UserRepository>();
-builder.Services.AddScoped<IImageRepository, ImageRepository>();
-builder.Services.AddScoped<ICommentRepository, CommentRepository>();
-builder.Services.AddScoped<ILikeRepository, LikeRepository>();
 
 builder.Services.AddControllersWithViews();
 

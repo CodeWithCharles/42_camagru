@@ -13,6 +13,7 @@ public class AppDbContext : DbContext
     public DbSet<Image> Images => Set<Image>();
     public DbSet<Comment> Comments => Set<Comment>();
     public DbSet<Like> Likes => Set<Like>();
+    public DbSet<Post> Posts => Set<Post>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -68,9 +69,9 @@ public class AppDbContext : DbContext
                 .HasFilter("\"ResetToken\" IS NOT NULL");
 
             // Relationships with cascade delete
-            entity.HasMany(u => u.Images)
-                .WithOne(i => i.User)
-                .HasForeignKey(i => i.UserId)
+            entity.HasMany(u => u.Posts)
+                .WithOne(p => p.User)
+                .HasForeignKey(p => p.UserId)
                 .OnDelete(DeleteBehavior.Cascade);
 
             entity.HasMany(u => u.Comments)
@@ -84,12 +85,46 @@ public class AppDbContext : DbContext
                 .OnDelete(DeleteBehavior.Cascade);
         });
 
+        // Post entity configuration
+        modelBuilder.Entity<Post>(entity =>
+        {
+            entity.HasKey(p => p.Id);
+
+            entity.Property(p => p.UserId)
+                .IsRequired();
+
+            entity.Property(p => p.Description)
+                .IsRequired()
+                .HasMaxLength(2000);
+
+            // Relationships with cascade delete
+            entity.HasOne(p => p.User)
+                .WithMany(u => u.Posts)
+                .HasForeignKey(p => p.UserId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            entity.HasMany(p => p.Images)
+                .WithOne(i => i.Post)
+                .HasForeignKey(i => i.PostId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            entity.HasMany(p => p.Comments)
+                .WithOne(c => c.Post)
+                .HasForeignKey(c => c.PostId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            entity.HasMany(p => p.Likes)
+                .WithOne(l => l.Post)
+                .HasForeignKey(l => l.PostId)
+                .OnDelete(DeleteBehavior.Cascade);
+        });
+
         // Image entity configuration
         modelBuilder.Entity<Image>(entity =>
         {
             entity.HasKey(i => i.Id);
 
-            entity.Property(i => i.UserId)
+            entity.Property(i => i.PostId)
                 .IsRequired();
 
             entity.Property(i => i.FilePath)
@@ -100,19 +135,9 @@ public class AppDbContext : DbContext
                 .IsRequired();
 
             // Relationships with cascade delete
-            entity.HasOne(i => i.User)
-                .WithMany(u => u.Images)
-                .HasForeignKey(i => i.UserId)
-                .OnDelete(DeleteBehavior.Cascade);
-
-            entity.HasMany(i => i.Comments)
-                .WithOne(c => c.Image)
-                .HasForeignKey(c => c.ImageId)
-                .OnDelete(DeleteBehavior.Cascade);
-
-            entity.HasMany(i => i.Likes)
-                .WithOne(l => l.Image)
-                .HasForeignKey(l => l.ImageId)
+            entity.HasOne(i => i.Post)
+                .WithMany(p => p.Images)
+                .HasForeignKey(i => i.PostId)
                 .OnDelete(DeleteBehavior.Cascade);
         });
 
@@ -121,7 +146,7 @@ public class AppDbContext : DbContext
         {
             entity.HasKey(c => c.Id);
 
-            entity.Property(c => c.ImageId)
+            entity.Property(c => c.PostId)
                 .IsRequired();
 
             entity.Property(c => c.UserId)
@@ -135,9 +160,9 @@ public class AppDbContext : DbContext
                 .IsRequired();
 
             // Relationships
-            entity.HasOne(c => c.Image)
-                .WithMany(i => i.Comments)
-                .HasForeignKey(c => c.ImageId)
+            entity.HasOne(c => c.Post)
+                .WithMany(p => p.Comments)
+                .HasForeignKey(c => c.PostId)
                 .OnDelete(DeleteBehavior.Cascade);
 
             entity.HasOne(c => c.User)
@@ -151,20 +176,20 @@ public class AppDbContext : DbContext
         {
             entity.HasKey(l => l.Id);
 
-            entity.Property(l => l.ImageId)
+            entity.Property(l => l.PostId)
                 .IsRequired();
 
             entity.Property(l => l.UserId)
                 .IsRequired();
 
-            // Unique constraint: one like per user per image
-            entity.HasIndex(l => new { l.ImageId, l.UserId })
+            // Unique constraint: one like per user per post
+            entity.HasIndex(l => new { l.PostId, l.UserId })
                 .IsUnique();
 
             // Relationships
-            entity.HasOne(l => l.Image)
-                .WithMany(i => i.Likes)
-                .HasForeignKey(l => l.ImageId)
+            entity.HasOne(l => l.Post)
+                .WithMany(p => p.Likes)
+                .HasForeignKey(l => l.PostId)
                 .OnDelete(DeleteBehavior.Cascade);
 
             entity.HasOne(l => l.User)
