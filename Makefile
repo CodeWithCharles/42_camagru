@@ -18,3 +18,10 @@ new-migration:
 		--project src/Camagru.Infrastructure \
 		--startup-project src/Camagru.Web \
 		--output-dir Persistence/Migrations
+
+down:
+	docker compose down
+
+up:
+	mkdir -p uploads db_data
+	docker compose up --build
