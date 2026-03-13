@@ -1,0 +1,48 @@
+@model Camagru.Application.Contracts.Auth.LoginRequest
+
+@{
+    ViewData["Title"] = "Login";
+}
+
+<h1>Login</h1>
+
+@if (TempData["SuccessMessage"] != null)
+{
+    <div>
+        <strong>@TempData["SuccessMessage"]</strong>
+    </div>
+}
+
+<form asp-action="Login" method="post">
+    @Html.AntiForgeryToken()
+    
+    <div asp-validation-summary="All"></div>
+    
+    <div>
+        <label asp-for="Username"></label>
+        <input asp-for="Username" />
+        <span asp-validation-for="Username"></span>
+    </div>
+    
+    <div>
+        <label asp-for="Password"></label>
+        <input asp-for="Password" type="password" />
+        <span asp-validation-for="Password"></span>
+    </div>
+    
+    <div>
+        <label asp-for="RememberMe"></label>
+        <input asp-for="RememberMe" type="checkbox" />
+    </div>
+    
+    <div>
+        <button type="submit">Login</button>
+    </div>
+</form>
+
+<div>
+    <a asp-action="Register">Don't have an account? Register</a>
+</div>
+<div>
+    <a asp-action="ForgotPassword">Forgot password?</a>
+</div>

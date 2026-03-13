@@ -1,7 +1,9 @@
+using Camagru.Application.Interfaces;
 using Camagru.Domain.Interfaces;
 using Camagru.Infrastructure.Options;
 using Camagru.Infrastructure.Persistence;
 using Camagru.Infrastructure.Persistence.Repositories;
+using Camagru.Infrastructure.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;

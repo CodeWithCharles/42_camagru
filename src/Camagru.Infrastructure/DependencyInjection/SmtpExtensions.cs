@@ -13,6 +13,9 @@ public static class SmtpExtensions
 		services.AddSingleton(smtpOptions);
 
 		services.AddScoped<IEmailSender, EmailService>();
+		services.AddScoped<IPasswordHasher, PasswordHasher>();
+		services.AddScoped<ITokenGenerator, TokenGenerator>();
+		services.AddScoped<IEmailTemplateBuilder, EmailTemplateBuilder>();
 
 		return services;
 	}
