@@ -1,0 +1,772 @@
+@{
+    ViewData["Title"] = "Create Post";
+}
+
+<div class="post-creation-container">
+    <h1>Create a New Post</h1>
+
+    <div class="creation-steps">
+        <div class="step-indicator">
+            <span class="step active" id="step1-indicator">1. Capture/Upload</span>
+            <span class="step" id="step2-indicator">2. Edit with Stickers</span>
+            <span class="step" id="step3-indicator">3. Review & Publish</span>
+        </div>
+
+        <!-- Step 1: Capture or Upload Image -->
+        <div class="creation-step" id="step1">
+            <h2>Capture or Upload Image</h2>
+
+            <div class="capture-section">
+                <h3>Option 1: Capture from Webcam</h3>
+                <video id="webcam-video" playsinline></video>
+                <canvas id="webcam-canvas" style="display: none;"></canvas>
+                <div class="controls">
+                    <button type="button" class="btn btn-primary" onclick="startWebcam()">Start Webcam</button>
+                    <button type="button" class="btn btn-secondary" onclick="stopWebcam()" style="display: none;" id="stop-webcam-btn">Stop Webcam</button>
+                    <button type="button" class="btn btn-success" onclick="captureFrame()" id="capture-btn" style="display: none;">Capture</button>
+                </div>
+            </div>
+
+            <div class="upload-section">
+                <h3>Option 2: Upload Image</h3>
+                <input type="file" id="file-upload" accept="image/jpeg,image/png" />
+                <small>Max 10MB, JPG or PNG</small>
+                <p id="upload-error" style="color: red; display: none;"></p>
+            </div>
+        </div>
+
+        <!-- Step 2: Edit with Stickers (Toolbox) -->
+        <div class="creation-step" id="step2" style="display: none;">
+            <h2>Add & Position Stickers</h2>
+
+            <div class="editor-layout">
+                <!-- Toolbox Sidebar -->
+                <div class="toolbox-sidebar">
+                    <div class="toolbox-header">
+                        <h3>Sticker Toolbox</h3>
+                    </div>
+                    
+                    <div class="category-tabs" id="category-tabs">
+                        <!-- Categories dynamically loaded -->
+                    </div>
+
+                    <div class="sticker-list" id="sticker-list">
+                        <!-- Stickers dynamically loaded -->
+                    </div>
+
+                    <div class="editor-instructions">
+                        <p><strong>How to use:</strong></p>
+                        <ul>
+                            <li>Click a sticker to add it</li>
+                            <li>Click sticker on image to select</li>
+                            <li>Drag to move</li>
+                            <li>Scroll to scale</li>
+                            <li>Delete key to remove</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Canvas Editor -->
+                <div class="canvas-editor-area">
+                    <div class="canvas-container">
+                        <canvas id="editor-canvas"></canvas>
+                        <p class="hint" id="overlay-hint">Click sticker on image to select • Drag to move • Scroll to scale • Delete to remove</p>
+                    </div>
+
+                    <div class="editor-actions">
+                        <button type="button" class="btn btn-secondary" onclick="bringForward()" id="bring-forward-btn" style="display: none;" title="Bring selected overlay forward">⬆ Bring Forward</button>
+                        <button type="button" class="btn btn-secondary" onclick="sendBack()" id="send-back-btn" style="display: none;" title="Send selected overlay back">⬇ Send Back</button>
+                        <button type="button" class="btn btn-secondary" onclick="clearAllStickers()">Clear All Stickers</button>
+                        <button type="button" class="btn btn-success" onclick="addImageToList()">Add Image to Post</button>
+                        <button type="button" class="btn btn-primary" onclick="proceedToReview()" id="done-editing-btn" style="display: none;">Done Editing → Review</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Step 3: Review & Publish -->
+        <div class="creation-step" id="step3" style="display: none;">
+            <h2>Review & Publish</h2>
+
+            <div class="images-review">
+                <h3>Images Added (<span id="image-count">0</span>/10)</h3>
+                <div class="images-grid" id="images-grid"></div>
+            </div>
+
+            <div class="post-caption">
+                <label for="description">Post Caption (Optional):</label>
+                <textarea id="description" placeholder="Write something about your post..." maxlength="2000"></textarea>
+                <small id="char-count">0/2000</small>
+            </div>
+
+            <div class="publish-actions">
+                <button type="button" class="btn btn-secondary" onclick="goBackToCapture()">Back</button>
+                <button type="button" class="btn btn-success btn-large" onclick="publishPost()">Publish Post</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    * { box-sizing: border-box; }
+    
+    .post-creation-container { max-width: 1200px; margin: 2rem auto; padding: 0 1rem; }
+    .step-indicator { display: flex; gap: 1rem; margin-bottom: 2rem; flex-wrap: wrap; }
+    .step { padding: 0.75rem 1rem; border-radius: 4px; background: #eee; color: #666; font-weight: 500; }
+    .step.active { background: #0066cc; color: white; }
+    
+    .creation-step { padding: 2rem; background: #f9f9f9; border-radius: 8px; border: 1px solid #ddd; }
+    .creation-step h2 { margin-top: 0; }
+    
+    .capture-section, .upload-section { margin-bottom: 2rem; }
+    .capture-section h3, .upload-section h3 { margin-top: 0; }
+    
+    #webcam-video { width: 100%; max-width: 400px; border-radius: 4px; background: #000; margin-bottom: 1rem; }
+    .controls { display: flex; gap: 0.5rem; margin-bottom: 1rem; flex-wrap: wrap; }
+    .btn { padding: 0.75rem 1.5rem; border: none; border-radius: 4px; cursor: pointer; font-weight: 500; }
+    .btn-primary { background: #0066cc; color: white; }
+    .btn-primary:hover { background: #0052a3; }
+    .btn-secondary { background: #ddd; color: #333; }
+    .btn-secondary:hover { background: #ccc; }
+    .btn-success { background: #4CAF50; color: white; }
+    .btn-success:hover { background: #3d8b40; }
+    .btn-large { padding: 1rem 2rem; font-size: 1.1rem; }
+    
+    #file-upload { margin-top: 0.5rem; }
+    
+    /* Editor Layout */
+    .editor-layout { display: flex; gap: 2rem; }
+    .toolbox-sidebar { 
+        flex: 0 0 250px; 
+        background: white; 
+        border: 1px solid #ddd; 
+        border-radius: 4px; 
+        padding: 1rem;
+        max-height: 700px;
+        overflow-y: auto;
+    }
+    .toolbox-header { margin-top: 0; }
+    .toolbox-header h3 { margin: 0 0 1rem 0; font-size: 1rem; }
+    
+    .category-tabs { display: flex; gap: 0.5rem; margin-bottom: 1rem; flex-wrap: wrap; }
+    .category-btn { 
+        padding: 0.5rem 1rem; 
+        border: 1px solid #ddd; 
+        background: white; 
+        border-radius: 4px; 
+        cursor: pointer; 
+        font-size: 0.875rem;
+    }
+    .category-btn.active { 
+        background: #0066cc; 
+        color: white; 
+        border-color: #0066cc;
+    }
+    
+    .sticker-list { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.5rem; margin-bottom: 1rem; }
+    .sticker-item { 
+        aspect-ratio: 1; 
+        border: 2px solid #ddd; 
+        border-radius: 4px; 
+        cursor: pointer; 
+        overflow: hidden;
+        background: white;
+        transition: border-color 0.2s;
+    }
+    .sticker-item:hover { border-color: #0066cc; }
+    .sticker-item img { width: 100%; height: 100%; object-fit: contain; padding: 4px; }
+    
+    .editor-instructions { 
+        font-size: 0.875rem; 
+        color: #666; 
+        background: #f0f0f0; 
+        padding: 0.75rem;
+        border-radius: 4px;
+    }
+    .editor-instructions ul { margin: 0.5rem 0 0 1.5rem; padding: 0; }
+    .editor-instructions li { margin: 0.25rem 0; }
+    
+    .canvas-editor-area { flex: 1; }
+    .canvas-container { margin-bottom: 1rem; }
+    #editor-canvas { 
+        display: block; 
+        max-width: 100%; 
+        border: 2px solid #0066cc; 
+        border-radius: 4px; 
+        background: white;
+        cursor: crosshair;
+    }
+    .hint { font-size: 0.875rem; color: #666; margin-top: 0.5rem; }
+    
+    .editor-actions { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-top: 1rem; }
+    .editor-actions .btn { flex: 0 1 auto; min-width: 150px; }
+    .editor-actions .btn-success { flex: 1; min-width: 200px; }
+    
+    /* Images Review Grid */
+    .images-review { margin-bottom: 2rem; }
+    .images-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); gap: 1rem; margin-top: 1rem; }
+    .image-item { position: relative; background: white; border: 1px solid #ddd; border-radius: 4px; overflow: hidden; }
+    .image-item img { width: 100%; display: block; }
+    .image-overlay { position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); display: none; align-items: center; justify-content: center; }
+    .image-item:hover .image-overlay { display: flex; }
+    .btn-icon { padding: 0.5rem 0.75rem; background: #ff4444; color: white; border: none; border-radius: 4px; cursor: pointer; font-weight: bold; }
+    #image-count { font-weight: bold; color: #0066cc; }
+    
+    .post-caption { margin-bottom: 2rem; }
+    .post-caption label { display: block; margin-bottom: 0.5rem; font-weight: 500; }
+    .post-caption textarea { width: 100%; padding: 0.75rem; border: 1px solid #ddd; border-radius: 4px; font-family: inherit; min-height: 100px; }
+    #char-count { font-size: 0.875rem; color: #999; }
+    
+    .publish-actions { display: flex; gap: 1rem; }
+    .publish-actions button { flex: 1; }
+    
+    @@media (max-width: 900px) {
+        .editor-layout { flex-direction: column; }
+        .toolbox-sidebar { flex: 1; max-height: 300px; }
+    }
+    
+    @@media (max-width: 600px) {
+        .creation-step { padding: 1rem; }
+        #webcam-video { max-width: 100%; }
+        .images-grid { grid-template-columns: repeat(auto-fill, minmax(80px, 1fr)); }
+        .editor-layout { gap: 1rem; }
+        .sticker-list { grid-template-columns: repeat(4, 1fr); }
+    }
+</style>
+
+<script>
+    // ============ Global State ============
+    let currentImageBase64 = null;
+    let currentImage = null;
+    let imagesArray = [];
+    let overlayCategories = {};
+    let overlaysById = {};
+    let selectedOverlayIndex = -1;
+    
+    // Canvas overlays state: array of {id, x, y, scale}
+    let canvasOverlays = [];
+    let isDraggingOverlay = false;
+    let dragStartX = 0;
+    let dragStartY = 0;
+
+    // ============ Webcam Functions ============
+    async function startWebcam() {
+        try {
+            const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'user' } });
+            const video = document.getElementById('webcam-video');
+            video.srcObject = stream;
+            video.style.display = 'block';
+            document.getElementById('capture-btn').style.display = 'inline-block';
+            document.getElementById('stop-webcam-btn').style.display = 'inline-block';
+            document.querySelector('button[onclick="startWebcam()"]').style.display = 'none';
+        } catch (err) {
+            let message = 'Could not access webcam';
+            if (err.name === 'NotAllowedError') {
+                message = 'Camera permission denied. Please allow camera access or use file upload.';
+            } else if (err.name === 'NotFoundError') {
+                message = 'No camera found on this device. Please use file upload.';
+            }
+            alert(message);
+        }
+    }
+
+    function stopWebcam() {
+        const video = document.getElementById('webcam-video');
+        if (video.srcObject) {
+            video.srcObject.getTracks().forEach(track => track.stop());
+        }
+        video.style.display = 'none';
+        document.getElementById('capture-btn').style.display = 'none';
+        document.getElementById('stop-webcam-btn').style.display = 'none';
+        document.querySelector('button[onclick="startWebcam()"]').style.display = 'inline-block';
+    }
+
+    function captureFrame() {
+        const video = document.getElementById('webcam-video');
+        const canvas = document.getElementById('webcam-canvas');
+        const ctx = canvas.getContext('2d');
+        canvas.width = video.videoWidth;
+        canvas.height = video.videoHeight;
+        ctx.drawImage(video, 0, 0);
+        currentImageBase64 = canvas.toDataURL('image/jpeg');
+        setupCanvasEditor();
+        goToStep(2);
+        stopWebcam();
+    }
+
+    // ============ File Upload Handler ============
+    document.getElementById('file-upload')?.addEventListener('change', function(e) {
+        const file = e.target.files[0];
+        if (!file) return;
+        
+        if (file.size > 10 * 1024 * 1024) {
+            document.getElementById('upload-error').textContent = 'File too large (max 10MB)';
+            document.getElementById('upload-error').style.display = 'block';
+            return;
+        }
+        
+        const reader = new FileReader();
+        reader.onload = function(event) {
+            currentImageBase64 = event.target.result;
+            setupCanvasEditor();
+            goToStep(2);
+        };
+        reader.readAsDataURL(file);
+    });
+
+    // ============ Canvas Editor Setup ============
+    function setupCanvasEditor() {
+        const canvas = document.getElementById('editor-canvas');
+        const ctx = canvas.getContext('2d');
+        const img = new Image();
+        
+        img.onload = function() {
+            canvas.width = Math.min(img.width, 800);
+            canvas.height = (canvas.width / img.width) * img.height;
+            ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+            currentImage = img;
+            
+            // Reset overlays for new image
+            canvasOverlays = [];
+            selectedOverlayIndex = -1;
+            
+            // Attach canvas event handlers
+            attachCanvasEventHandlers();
+        };
+        
+        img.src = currentImageBase64;
+    }
+
+    function attachCanvasEventHandlers() {
+        const canvas = document.getElementById('editor-canvas');
+        canvas.setAttribute('tabindex', '0');
+        canvas.focus();
+        
+        // Remove old listeners by cloning
+        const newCanvas = canvas.cloneNode(true);
+        canvas.parentNode.replaceChild(newCanvas, canvas);
+        const updatedCanvas = document.getElementById('editor-canvas');
+        
+        // Mousedown: check if clicking on an overlay
+        updatedCanvas.addEventListener('mousedown', (e) => {
+            const rect = updatedCanvas.getBoundingClientRect();
+            const x = (e.clientX - rect.left) * (updatedCanvas.width / rect.width);
+            const y = (e.clientY - rect.top) * (updatedCanvas.height / rect.height);
+            
+            // Check if clicking on any overlay (from back to front)
+            let found = false;
+            let clickedOverlayIndex = -1;
+            for (let i = canvasOverlays.length - 1; i >= 0; i--) {
+                const overlay = canvasOverlays[i];
+                const overlayData = overlaysById[overlay.id];
+                if (!overlayData) continue;
+                
+                const scaledW = overlayData.width * overlay.scale;
+                const scaledH = overlayData.height * overlay.scale;
+                
+                if (x >= overlay.x && x <= overlay.x + scaledW &&
+                    y >= overlay.y && y <= overlay.y + scaledH) {
+                    clickedOverlayIndex = i;
+                    found = true;
+                    break;
+                }
+            }
+            
+            if (found) {
+                // Bring clicked overlay to front (move to end of array)
+                const clickedOverlay = canvasOverlays.splice(clickedOverlayIndex, 1)[0];
+                canvasOverlays.push(clickedOverlay);
+                selectedOverlayIndex = canvasOverlays.length - 1;
+                
+                isDraggingOverlay = true;
+                dragStartX = x;
+                dragStartY = y;
+                drawEditorCanvas();
+                updateZOrderButtonVisibility();
+            }
+        });
+        
+        updatedCanvas.addEventListener('mousemove', (e) => {
+            if (!isDraggingOverlay || selectedOverlayIndex < 0) return;
+            
+            const rect = updatedCanvas.getBoundingClientRect();
+            const x = (e.clientX - rect.left) * (updatedCanvas.width / rect.width);
+            const y = (e.clientY - rect.top) * (updatedCanvas.height / rect.height);
+            
+            const overlay = canvasOverlays[selectedOverlayIndex];
+            const overlayData = overlaysById[overlay.id];
+            if (!overlayData) return;
+            
+            const deltaX = x - dragStartX;
+            const deltaY = y - dragStartY;
+            
+            const scaledW = overlayData.width * overlay.scale;
+            const scaledH = overlayData.height * overlay.scale;
+            
+            overlay.x = Math.max(0, Math.min(overlay.x + deltaX, updatedCanvas.width - scaledW));
+            overlay.y = Math.max(0, Math.min(overlay.y + deltaY, updatedCanvas.height - scaledH));
+            
+            dragStartX = x;
+            dragStartY = y;
+            drawEditorCanvas();
+        });
+        
+        updatedCanvas.addEventListener('mouseup', () => {
+            isDraggingOverlay = false;
+        });
+        
+        updatedCanvas.addEventListener('mouseleave', () => {
+            isDraggingOverlay = false;
+        });
+        
+        // Scroll to scale selected overlay
+        updatedCanvas.addEventListener('wheel', (e) => {
+            if (selectedOverlayIndex < 0) return;
+            e.preventDefault();
+            
+            const overlay = canvasOverlays[selectedOverlayIndex];
+            const scaleDelta = e.deltaY > 0 ? -0.1 : 0.1;
+            overlay.scale = Math.max(0.1, Math.min(overlay.scale + scaleDelta, 3));
+            drawEditorCanvas();
+        });
+        
+        // Delete key to remove selected overlay
+        updatedCanvas.addEventListener('keydown', (e) => {
+            if (e.key === 'Delete' && selectedOverlayIndex >= 0) {
+                canvasOverlays.splice(selectedOverlayIndex, 1);
+                selectedOverlayIndex = -1;
+                drawEditorCanvas();
+            }
+        });
+    }
+
+    function drawEditorCanvas() {
+        if (!currentImage) return;
+        
+        const canvas = document.getElementById('editor-canvas');
+        const ctx = canvas.getContext('2d');
+        
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        ctx.drawImage(currentImage, 0, 0, canvas.width, canvas.height);
+        
+        // Draw all overlays on canvas
+        canvasOverlays.forEach((overlay, index) => {
+            const overlayData = overlaysById[overlay.id];
+            if (!overlayData || !overlayData.img) return; // Must have loaded image
+            
+            const overlayImg = overlayData.img;
+            const scaledW = overlayData.width * overlay.scale;
+            const scaledH = overlayData.height * overlay.scale;
+            
+            // Draw overlay with transparency
+            ctx.globalAlpha = 0.9;
+            ctx.drawImage(overlayImg, overlay.x, overlay.y, scaledW, scaledH);
+            ctx.globalAlpha = 1.0;
+            
+            // Draw z-order indicator (small number in top-left corner of overlay)
+            const zOrderText = `Z:${index + 1}`;
+            ctx.fillStyle = '#000000';
+            ctx.globalAlpha = 0.7;
+            ctx.fillRect(overlay.x, overlay.y, 30, 20);
+            ctx.globalAlpha = 1.0;
+            ctx.fillStyle = '#ffff00';
+            ctx.font = 'bold 14px Arial';
+            ctx.textAlign = 'left';
+            ctx.textBaseline = 'top';
+            ctx.fillText(zOrderText, overlay.x + 3, overlay.y + 2);
+            
+            // Highlight selected overlay with border
+            if (index === selectedOverlayIndex) {
+                ctx.strokeStyle = '#ffff00';
+                ctx.lineWidth = 3;
+                ctx.strokeRect(overlay.x - 2, overlay.y - 2, scaledW + 4, scaledH + 4);
+            }
+        });
+    }
+
+    // ============ Sticker Toolbox Functions ============
+    async function loadStickers() {
+        try {
+            const response = await fetch('@Url.Action("GetOverlays", "Posts")');
+            const result = await response.json();
+            if (result.success) {
+                // Group by category
+                overlayCategories = {};
+                result.overlays.forEach(overlay => {
+                    if (!overlayCategories[overlay.category]) {
+                        overlayCategories[overlay.category] = [];
+                    }
+                    overlayCategories[overlay.category].push(overlay);
+                    overlaysById[overlay.id] = { width: 100, height: 100 }; // Placeholder size
+                });
+                
+                // Load actual overlay images
+                for (const overlayId in overlaysById) {
+                    const overlay = result.overlays.find(o => o.id == overlayId);
+                    if (overlay) {
+                        const img = new Image();
+                        img.src = overlay.filePath;
+                        img.onload = function() {
+                            overlaysById[overlayId].width = img.width;
+                            overlaysById[overlayId].height = img.height;
+                            overlaysById[overlayId].img = img;
+                        };
+                    }
+                }
+                
+                renderCategoryTabs();
+                const firstCategory = Object.keys(overlayCategories)[0];
+                if (firstCategory) {
+                    renderStickerList(firstCategory);
+                }
+            }
+        } catch (err) {
+            console.error('Error loading stickers:', err);
+        }
+    }
+
+    function renderCategoryTabs() {
+        const tabsContainer = document.getElementById('category-tabs');
+        tabsContainer.innerHTML = '';
+        
+        Object.keys(overlayCategories).forEach((category, index) => {
+            const btn = document.createElement('button');
+            btn.type = 'button';
+            btn.className = 'category-btn' + (index === 0 ? ' active' : '');
+            btn.textContent = category;
+            btn.onclick = () => {
+                document.querySelectorAll('.category-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                renderStickerList(category);
+            };
+            tabsContainer.appendChild(btn);
+        });
+    }
+
+    function renderStickerList(category) {
+        const listContainer = document.getElementById('sticker-list');
+        listContainer.innerHTML = '';
+        
+        if (!overlayCategories[category]) return;
+        
+        overlayCategories[category].forEach(overlay => {
+            const div = document.createElement('div');
+            div.className = 'sticker-item';
+            div.onclick = () => addStickerToCanvas(overlay.id, overlay.filePath);
+            div.title = overlay.name;
+            
+            const img = document.createElement('img');
+            img.src = overlay.filePath;
+            div.appendChild(img);
+            listContainer.appendChild(div);
+        });
+    }
+
+    function addStickerToCanvas(overlayId, filePath) {
+        const canvas = document.getElementById('editor-canvas');
+        
+        // Create overlay instance
+        const overlayInstance = {
+            id: overlayId,
+            x: 50,
+            y: 50,
+            scale: 1
+        };
+        
+        canvasOverlays.push(overlayInstance);
+        selectedOverlayIndex = canvasOverlays.length - 1;
+        
+        // Load image if not already loaded
+        if (!overlaysById[overlayId].img) {
+            const img = new Image();
+            img.src = filePath;
+            img.onload = function() {
+                overlaysById[overlayId].width = img.width;
+                overlaysById[overlayId].height = img.height;
+                overlaysById[overlayId].img = img;
+                drawEditorCanvas();
+                updateZOrderButtonVisibility();
+            };
+        } else {
+            drawEditorCanvas();
+            updateZOrderButtonVisibility();
+        }
+    }
+
+    function clearAllStickers() {
+        if (confirm('Clear all stickers?')) {
+            canvasOverlays = [];
+            selectedOverlayIndex = -1;
+            drawEditorCanvas();
+            updateZOrderButtonVisibility();
+        }
+    }
+
+    function bringForward() {
+        if (selectedOverlayIndex < 0 || selectedOverlayIndex >= canvasOverlays.length - 1) return;
+        
+        // Swap with next overlay
+        const temp = canvasOverlays[selectedOverlayIndex];
+        canvasOverlays[selectedOverlayIndex] = canvasOverlays[selectedOverlayIndex + 1];
+        canvasOverlays[selectedOverlayIndex + 1] = temp;
+        selectedOverlayIndex = selectedOverlayIndex + 1;
+        
+        drawEditorCanvas();
+        updateZOrderButtonVisibility();
+    }
+
+    function sendBack() {
+        if (selectedOverlayIndex <= 0) return;
+        
+        // Swap with previous overlay
+        const temp = canvasOverlays[selectedOverlayIndex];
+        canvasOverlays[selectedOverlayIndex] = canvasOverlays[selectedOverlayIndex - 1];
+        canvasOverlays[selectedOverlayIndex - 1] = temp;
+        selectedOverlayIndex = selectedOverlayIndex - 1;
+        
+        drawEditorCanvas();
+        updateZOrderButtonVisibility();
+    }
+
+    function updateZOrderButtonVisibility() {
+        const hasSelected = selectedOverlayIndex >= 0;
+        const canMoveForward = selectedOverlayIndex < canvasOverlays.length - 1;
+        const canMoveBack = selectedOverlayIndex > 0;
+        
+        document.getElementById('bring-forward-btn').style.display = hasSelected && canMoveForward ? 'inline-block' : 'none';
+        document.getElementById('send-back-btn').style.display = hasSelected && canMoveBack ? 'inline-block' : 'none';
+    }
+
+    // ============ Image Processing ============
+    async function addImageToList() {
+        if (!currentImage) {
+            alert('No image selected');
+            return;
+        }
+        
+        // Composite all overlays onto canvas and get base64
+        const canvas = document.getElementById('editor-canvas');
+        const compositeBase64 = canvas.toDataURL('image/jpeg', 0.95);
+        
+        imagesArray.push(compositeBase64);
+        
+        if (imagesArray.length < 10) {
+            const addMore = confirm(`Image added! (${imagesArray.length}/10) Add another image?`);
+            if (addMore) {
+                currentImage = null;
+                currentImageBase64 = null;
+                canvasOverlays = [];
+                selectedOverlayIndex = -1;
+                goToStep(1);
+                return;
+            }
+        }
+        
+        updateImagesGrid();
+        goToStep(3);
+    }
+
+    function proceedToReview() {
+        if (imagesArray.length === 0) {
+            alert('Add at least one image before proceeding to review');
+            return;
+        }
+        updateImagesGrid();
+        goToStep(3);
+    }
+
+    function updateImagesGrid() {
+        const grid = document.getElementById('images-grid');
+        grid.innerHTML = '';
+        
+        imagesArray.forEach((imageBase64, index) => {
+            const div = document.createElement('div');
+            div.className = 'image-item';
+            div.innerHTML = `
+                <img src="${imageBase64}" />
+                <div class="image-overlay">
+                    <button class="btn-icon remove-btn" onclick="removeImage(${index})" title="Remove">✕</button>
+                </div>
+            `;
+            grid.appendChild(div);
+        });
+        
+        document.getElementById('image-count').textContent = imagesArray.length;
+        
+        if (imagesArray.length > 0) {
+            document.getElementById('done-editing-btn').style.display = 'inline-block';
+        }
+    }
+
+    function removeImage(index) {
+        imagesArray.splice(index, 1);
+        updateImagesGrid();
+    }
+
+    document.getElementById('description')?.addEventListener('input', function() {
+        document.getElementById('char-count').textContent = this.value.length + '/2000';
+    });
+
+    async function publishPost() {
+        if (imagesArray.length === 0) {
+            alert('Add at least one image');
+            return;
+        }
+        
+        const description = document.getElementById('description').value;
+        const request = {
+            description: description,
+            images: imagesArray
+        };
+        
+        try {
+            const response = await fetch('@Url.Action("Create", "Posts")', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(request)
+            });
+            
+            const result = await response.json();
+            if (result.success) {
+                alert('Post published successfully!');
+                window.location.href = '@Url.Action("Index", "Profile")';
+            } else {
+                alert('Error: ' + result.message || result.error);
+            }
+        } catch (err) {
+            alert('Error publishing post: ' + err.message);
+        }
+    }
+
+    function goBackToCapture() {
+        imagesArray = [];
+        currentImage = null;
+        currentImageBase64 = null;
+        canvasOverlays = [];
+        selectedOverlayIndex = -1;
+        goToStep(1);
+    }
+
+    function goToStep(step) {
+        document.querySelectorAll('.creation-step').forEach(el => el.style.display = 'none');
+        document.querySelectorAll('.step').forEach(el => el.classList.remove('active'));
+        
+        document.getElementById(`step${step}`).style.display = 'block';
+        document.getElementById(`step${step}-indicator`).classList.add('active');
+    }
+
+    // Load stickers when entering step 2
+    async function onStep2Enter() {
+        if (!overlayCategories || Object.keys(overlayCategories).length === 0) {
+            await loadStickers();
+        }
+    }
+
+    // Initialize
+    window.addEventListener('DOMContentLoaded', () => {
+        // Preload stickers
+        loadStickers();
+    });
+</script>

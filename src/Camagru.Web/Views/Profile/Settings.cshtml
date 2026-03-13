@@ -1,0 +1,293 @@
+@using Camagru.Web.Models
+@model SettingsViewModel
+
+@{
+    ViewData["Title"] = "Settings";
+    
+    string MaskEmail(string email)
+    {
+        var parts = email.Split('@');
+        if (parts.Length != 2) return email;
+        var localPart = parts[0];
+        var domain = parts[1];
+        if (localPart.Length <= 1) return $"{localPart}***@{domain}";
+        return $"{localPart[0]}***@{domain}";
+    }
+}
+
+<div class="settings-container">
+    <h1>Settings & Preferences</h1>
+
+    <form method="post" asp-action="Settings" asp-controller="Profile">
+        @Html.AntiForgeryToken()
+
+        <div class="settings-section">
+            <h2>Notifications</h2>
+            <div class="setting-group">
+                <div class="setting-header">
+                    <label for="EmailNotificationsEnabled">Email Notifications</label>
+                    <p class="setting-description">Get notified when someone likes or comments on your posts</p>
+                </div>
+                <div class="setting-control">
+                    <input type="hidden" name="EmailNotificationsEnabled" value="false" />
+                    <input type="checkbox" id="EmailNotificationsEnabled" name="EmailNotificationsEnabled" value="true" @(Model.EmailNotificationsEnabled ? "checked" : "") class="toggle-checkbox" />
+                    <label for="EmailNotificationsEnabled" class="toggle-label">
+                        <span class="toggle-switch"></span>
+                        <span class="toggle-text">@(Model.EmailNotificationsEnabled ? "Enabled" : "Disabled")</span>
+                    </label>
+                </div>
+            </div>
+        </div>
+
+        <div class="settings-section">
+            <h2>Account Management</h2>
+
+            <div class="setting-group">
+                <div class="setting-header">
+                    <label>Email Address</label>
+                    <p class="setting-description">Current email: <strong>@MaskEmail(Model.Email)</strong></p>
+                </div>
+                <div class="setting-control">
+                    <button type="button" class="btn btn-link" onclick="openChangeEmailDialog()">Change Email</button>
+                </div>
+            </div>
+
+            <div class="setting-group">
+                <div class="setting-header">
+                    <label>Password</label>
+                    <p class="setting-description">Change your password to keep your account secure</p>
+                </div>
+                <div class="setting-control">
+                    <button type="button" class="btn btn-link" onclick="openChangePasswordDialog()">Change Password</button>
+                </div>
+            </div>
+
+            <div class="setting-group">
+                <div class="setting-header">
+                    <label>Delete Account</label>
+                    <p class="setting-description">Permanently delete your account and all associated data (cannot be undone)</p>
+                </div>
+                <div class="setting-control">
+                    <button type="button" class="btn btn-danger" onclick="openDeleteAccountDialog()">Delete Account</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="settings-actions">
+            <button type="submit" class="btn btn-primary">Save Preferences</button>
+            <a href="@Url.Action("Index", "Profile")" class="btn btn-secondary">Back to Profile</a>
+        </div>
+    </form>
+</div>
+
+<!-- Change Email Dialog -->
+<dialog id="changeEmailDialog" class="modal-dialog">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h2>Change Email Address</h2>
+            <button type="button" class="modal-close" onclick="closeChangeEmailDialog()">&times;</button>
+        </div>
+        <form id="changeEmailForm">
+            <div class="modal-body">
+                <p class="info-text">Changing your email requires password verification. You will need to confirm your new email.</p>
+                <div class="form-group">
+                    <label for="changeEmailPassword">Current Password</label>
+                    <input type="password" id="changeEmailPassword" name="currentPassword" class="form-control" required />
+                </div>
+                <div class="form-group">
+                    <label for="changeEmailNewEmail">New Email Address</label>
+                    <input type="email" id="changeEmailNewEmail" name="newEmail" class="form-control" required />
+                </div>
+                <div id="changeEmailError" class="error-message" style="display: none;"></div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" onclick="closeChangeEmailDialog()">Cancel</button>
+                <button type="button" class="btn btn-primary" onclick="submitChangeEmail()">Change Email</button>
+            </div>
+        </form>
+    </dialog>
+
+<!-- Change Password Dialog -->
+<dialog id="changePasswordDialog" class="modal-dialog">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h2>Change Password</h2>
+            <button type="button" class="modal-close" onclick="closeChangePasswordDialog()">&times;</button>
+        </div>
+        <form id="changePasswordForm">
+            <div class="modal-body">
+                <p class="info-text">Enter your current password and choose a new secure password.</p>
+                <div class="form-group">
+                    <label for="changePasswordCurrent">Current Password</label>
+                    <input type="password" id="changePasswordCurrent" name="currentPassword" class="form-control" required />
+                </div>
+                <div class="form-group">
+                    <label for="changePasswordNew">New Password</label>
+                    <input type="password" id="changePasswordNew" name="newPassword" class="form-control" required />
+                    <small>Must be 8+ characters with uppercase, lowercase, and numbers</small>
+                </div>
+                <div class="form-group">
+                    <label for="changePasswordConfirm">Confirm New Password</label>
+                    <input type="password" id="changePasswordConfirm" name="confirmNewPassword" class="form-control" required />
+                </div>
+                <div id="changePasswordError" class="error-message" style="display: none;"></div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" onclick="closeChangePasswordDialog()">Cancel</button>
+                <button type="button" class="btn btn-primary" onclick="submitChangePassword()">Change Password</button>
+            </div>
+        </form>
+    </dialog>
+
+<!-- Delete Account Dialog -->
+<dialog id="deleteAccountDialog" class="modal-dialog">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h2>Delete Account</h2>
+            <button type="button" class="modal-close" onclick="closeDeleteAccountDialog()">&times;</button>
+        </div>
+        <form id="deleteAccountForm">
+            <div class="modal-body">
+                <p class="warning-text"><strong>⚠️ Warning:</strong> This action is permanent and cannot be undone.</p>
+                <p>When you delete your account:</p>
+                <ul>
+                    <li>All your posts and images will be deleted</li>
+                    <li>All your comments will be deleted</li>
+                    <li>Your profile will be removed</li>
+                    <li>You will not be able to recover any data</li>
+                </ul>
+                <div class="form-group">
+                    <label for="deleteAccountPassword">Enter your password to confirm</label>
+                    <input type="password" id="deleteAccountPassword" name="password" class="form-control" required />
+                </div>
+                <div id="deleteAccountError" class="error-message" style="display: none;"></div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" onclick="closeDeleteAccountDialog()">Cancel</button>
+                <button type="button" class="btn btn-danger" onclick="submitDeleteAccount()">Delete My Account</button>
+            </div>
+        </form>
+    </dialog>
+
+<style>
+    .settings-container { max-width: 700px; margin: 2rem auto; padding: 0 1rem; }
+    .settings-container h1 { margin-bottom: 2rem; }
+    .settings-section { margin-bottom: 2rem; padding: 1.5rem; background: #f9f9f9; border-radius: 4px; border-left: 4px solid #0066cc; }
+    .settings-section h2 { margin-top: 0; margin-bottom: 1.5rem; font-size: 1.25rem; color: #333; }
+    .setting-group { display: flex; justify-content: space-between; align-items: center; padding: 1.5rem 0; border-bottom: 1px solid #e0e0e0; }
+    .setting-group:last-child { border-bottom: none; }
+    .setting-header { flex: 1; }
+    .setting-header label { display: block; font-weight: 500; color: #333; margin-bottom: 0.25rem; }
+    .setting-description { margin: 0; color: #666; font-size: 0.875rem; }
+    .setting-control { flex-shrink: 0; margin-left: 1rem; }
+
+    .toggle-checkbox { display: none; }
+    .toggle-label { display: inline-flex; align-items: center; cursor: pointer; gap: 0.5rem; }
+    .toggle-switch { width: 48px; height: 28px; background: #ccc; border-radius: 14px; position: relative; transition: background 0.3s; }
+    .toggle-switch::after { content: ''; position: absolute; width: 24px; height: 24px; background: white; border-radius: 50%; top: 2px; left: 2px; transition: left 0.3s; }
+    .toggle-checkbox:checked + .toggle-label .toggle-switch { background: #4CAF50; }
+    .toggle-checkbox:checked + .toggle-label .toggle-switch::after { left: 22px; }
+
+    .btn { padding: 0.75rem 1.5rem; border: none; border-radius: 4px; font-size: 1rem; font-weight: 500; cursor: pointer; text-decoration: none; transition: background-color 0.2s; display: inline-block; }
+    .btn-link { background: #0066cc; color: white; padding: 0.5rem 1rem; font-size: 0.875rem; }
+    .btn-link:hover { background: #0052a3; }
+    .btn-danger { background: #d32f2f; color: white; padding: 0.5rem 1rem; font-size: 0.875rem; }
+    .btn-danger:hover { background: #b71c1c; }
+    .btn-primary { background: #0066cc; color: white; }
+    .btn-primary:hover { background: #0052a3; }
+    .btn-secondary { background: #ddd; color: #333; }
+    .btn-secondary:hover { background: #ccc; }
+    .settings-actions { display: flex; gap: 1rem; margin-top: 2rem; }
+    .settings-actions .btn { flex: 1; }
+
+    .modal-dialog { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 90%; max-width: 500px; padding: 0; border: none; border-radius: 8px; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15); background: white; }
+    .modal-dialog::backdrop { background: rgba(0, 0, 0, 0.5); }
+    .modal-content { display: flex; flex-direction: column; }
+    .modal-header { display: flex; justify-content: space-between; align-items: center; padding: 1.5rem; border-bottom: 1px solid #e0e0e0; }
+    .modal-header h2 { margin: 0; font-size: 1.25rem; color: #333; }
+    .modal-close { background: none; border: none; font-size: 1.5rem; cursor: pointer; color: #999; padding: 0; width: 32px; height: 32px; }
+    .modal-close:hover { color: #333; }
+    .modal-body { padding: 1.5rem; }
+    .modal-body p { margin-top: 0; margin-bottom: 1rem; color: #666; }
+    .info-text { background: #e3f2fd; padding: 0.75rem; border-radius: 4px; color: #1565c0; font-size: 0.875rem; }
+    .warning-text { background: #fff3cd; padding: 0.75rem; border-radius: 4px; color: #856404; font-size: 0.875rem; }
+    .modal-body ul { margin: 1rem 0; padding-left: 1.5rem; color: #666; }
+    .modal-body li { margin-bottom: 0.5rem; }
+    .form-group { margin-bottom: 1.5rem; }
+    .form-group label { display: block; margin-bottom: 0.5rem; font-weight: 500; color: #333; }
+    .form-group input { width: 100%; padding: 0.75rem; border: 1px solid #ddd; border-radius: 4px; font-size: 1rem; font-family: inherit; }
+    .form-group input:focus { outline: none; border-color: #0066cc; box-shadow: 0 0 0 3px rgba(0, 102, 204, 0.1); }
+    .form-group small { display: block; margin-top: 0.25rem; color: #999; font-size: 0.75rem; }
+    .error-message { color: #d32f2f; font-size: 0.875rem; padding: 0.75rem; background: #ffebee; border-radius: 4px; margin-bottom: 1rem; }
+    .modal-footer { display: flex; gap: 1rem; padding: 1.5rem; border-top: 1px solid #e0e0e0; justify-content: flex-end; }
+    .modal-footer button { flex: 1; max-width: 150px; }
+</style>
+
+<script>
+    const tokenInput = document.querySelector('input[name="__RequestVerificationToken"]');
+    const antiForgeryToken = tokenInput ? tokenInput.value : '';
+
+    function openChangeEmailDialog() { document.getElementById('changeEmailDialog').showModal(); document.getElementById('changeEmailError').style.display = 'none'; }
+    function closeChangeEmailDialog() { document.getElementById('changeEmailDialog').close(); document.getElementById('changeEmailForm').reset(); }
+    
+    async function submitChangeEmail() {
+        const currentPassword = document.getElementById('changeEmailPassword').value;
+        const newEmail = document.getElementById('changeEmailNewEmail').value;
+        const errorDiv = document.getElementById('changeEmailError');
+        const response = await fetch('@Url.Action("ChangeEmail", "Profile")', {
+            method: 'POST',
+            headers: { 
+                'Content-Type': 'application/json',
+                'RequestVerificationToken': antiForgeryToken
+            },
+            body: JSON.stringify({ currentPassword, newEmail })
+        });
+        const result = await response.json();
+        if (result.success) { alert(result.message); closeChangeEmailDialog(); location.reload(); }
+        else { errorDiv.textContent = result.error; errorDiv.style.display = 'block'; }
+    }
+
+    function openChangePasswordDialog() { document.getElementById('changePasswordDialog').showModal(); document.getElementById('changePasswordError').style.display = 'none'; }
+    function closeChangePasswordDialog() { document.getElementById('changePasswordDialog').close(); document.getElementById('changePasswordForm').reset(); }
+    
+    async function submitChangePassword() {
+        const currentPassword = document.getElementById('changePasswordCurrent').value;
+        const newPassword = document.getElementById('changePasswordNew').value;
+        const confirmPassword = document.getElementById('changePasswordConfirm').value;
+        const errorDiv = document.getElementById('changePasswordError');
+        if (newPassword !== confirmPassword) { errorDiv.textContent = 'Passwords do not match'; errorDiv.style.display = 'block'; return; }
+        const response = await fetch('@Url.Action("ChangePassword", "Profile")', {
+            method: 'POST',
+            headers: { 
+                'Content-Type': 'application/json',
+                'RequestVerificationToken': antiForgeryToken
+            },
+            body: JSON.stringify({ currentPassword, newPassword, confirmNewPassword: confirmPassword })
+        });
+        const result = await response.json();
+        if (result.success) { alert(result.message); closeChangePasswordDialog(); }
+        else { errorDiv.textContent = result.error; errorDiv.style.display = 'block'; }
+    }
+
+    function openDeleteAccountDialog() { document.getElementById('deleteAccountDialog').showModal(); document.getElementById('deleteAccountError').style.display = 'none'; }
+    function closeDeleteAccountDialog() { document.getElementById('deleteAccountDialog').close(); document.getElementById('deleteAccountForm').reset(); }
+    
+    async function submitDeleteAccount() {
+        const password = document.getElementById('deleteAccountPassword').value;
+        const errorDiv = document.getElementById('deleteAccountError');
+        if (!confirm('Are you absolutely sure? This cannot be undone!')) return;
+        const response = await fetch('@Url.Action("DeleteAccount", "Profile")', {
+            method: 'POST',
+            headers: { 
+                'Content-Type': 'application/json',
+                'RequestVerificationToken': antiForgeryToken
+            },
+            body: JSON.stringify({ password })
+        });
+        const result = await response.json();
+        if (result.success) { alert(result.message); window.location.href = '@Url.Action("Index", "Home")'; }
+        else { errorDiv.textContent = result.error; errorDiv.style.display = 'block'; }
+    }
+</script>
+
+@section Scripts { <partial name="_ValidationScriptsPartial" /> }

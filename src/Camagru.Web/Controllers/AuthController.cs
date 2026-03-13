@@ -30,13 +30,13 @@ public class AuthController : Controller
         _resetPasswordUseCase = resetPasswordUseCase;
     }
 
-    [HttpGet]
+    [HttpGet("Register")]
     public IActionResult Register()
     {
         return View(new RegisterRequest());
     }
 
-    [HttpPost]
+    [HttpPost("Register")]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Register(RegisterRequest request)
     {
@@ -56,13 +56,13 @@ public class AuthController : Controller
         return RedirectToAction(nameof(RegisterConfirmation));
     }
 
-    [HttpGet]
+    [HttpGet("RegisterConfirmation")]
     public IActionResult RegisterConfirmation()
     {
         return View();
     }
 
-    [HttpGet]
+    [HttpGet("ConfirmEmail")]
     public async Task<IActionResult> ConfirmEmail(string token)
     {
         if (string.IsNullOrWhiteSpace(token))
@@ -81,13 +81,13 @@ public class AuthController : Controller
         return RedirectToAction(nameof(Login));
     }
 
-    [HttpGet]
+    [HttpGet("Login")]
     public IActionResult Login()
     {
         return View(new LoginRequest());
     }
 
-    [HttpPost]
+    [HttpPost("Login")]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Login(LoginRequest request)
     {
@@ -127,7 +127,7 @@ public class AuthController : Controller
         return RedirectToAction("Index", "Home");
     }
 
-    [HttpPost]
+    [HttpPost("Logout")]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Logout()
     {
@@ -135,13 +135,13 @@ public class AuthController : Controller
         return RedirectToAction(nameof(Login));
     }
 
-    [HttpGet]
+    [HttpGet("ForgotPassword")]
     public IActionResult ForgotPassword()
     {
         return View(new RequestPasswordResetRequest());
     }
 
-    [HttpPost]
+    [HttpPost("ForgotPassword")]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> ForgotPassword(RequestPasswordResetRequest request)
     {
@@ -157,13 +157,13 @@ public class AuthController : Controller
         return RedirectToAction(nameof(ForgotPasswordConfirmation));
     }
 
-    [HttpGet]
+    [HttpGet("ForgotPasswordConfirmation")]
     public IActionResult ForgotPasswordConfirmation()
     {
         return View();
     }
 
-    [HttpGet]
+    [HttpGet("ResetPassword")]
     public IActionResult ResetPassword(string token)
     {
         if (string.IsNullOrWhiteSpace(token))
@@ -174,7 +174,7 @@ public class AuthController : Controller
         return View(new ResetPasswordRequest { Token = token });
     }
 
-    [HttpPost]
+    [HttpPost("ResetPassword")]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> ResetPassword(ResetPasswordRequest request)
     {
@@ -195,7 +195,7 @@ public class AuthController : Controller
         return RedirectToAction(nameof(Login));
     }
 
-    [HttpGet]
+    [HttpGet("Error")]
     public IActionResult Error(string message)
     {
         ViewBag.ErrorMessage = message;

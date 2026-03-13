@@ -8,18 +8,15 @@ namespace Camagru.Application.UseCases.Auth;
 public class UpdateProfileUseCase
 {
     private readonly IUserRepository _userRepository;
-    private readonly IPasswordHasher _passwordHasher;
     private readonly IEmailSender _emailSender;
     private readonly IEmailTemplateBuilder _templateBuilder;
 
     public UpdateProfileUseCase(
         IUserRepository userRepository,
-        IPasswordHasher passwordHasher,
         IEmailSender emailSender,
         IEmailTemplateBuilder templateBuilder)
     {
         _userRepository = userRepository;
-        _passwordHasher = passwordHasher;
         _emailSender = emailSender;
         _templateBuilder = templateBuilder;
     }
@@ -30,9 +27,6 @@ public class UpdateProfileUseCase
         
         if (user == null)
             return ServiceResult.Fail("User not found");
-
-        if (!_passwordHasher.Verify(request.CurrentPassword, user.PasswordHash))
-            return ServiceResult.Fail("Current password is incorrect");
 
         var changes = new List<string>();
 
@@ -45,20 +39,16 @@ public class UpdateProfileUseCase
             changes.Add("username");
         }
 
-        if (request.Email != user.Email)
+        if (request.DisplayName != user.DisplayName)
         {
-            if (await _userRepository.EmailExistsAsync(request.Email))
-                return ServiceResult.Fail("Email already registered");
-
-            user.Email = request.Email;
-            changes.Add("email");
+            user.DisplayName = request.DisplayName;
+            changes.Add("display name");
         }
 
-        if (!string.IsNullOrWhiteSpace(request.NewPassword))
+        if (request.Bio != user.Bio)
         {
-            // Delegate password hashing to infrastructure service
-            user.PasswordHash = _passwordHasher.Hash(request.NewPassword);
-            changes.Add("password");
+            user.Bio = request.Bio;
+            changes.Add("bio");
         }
 
         await _userRepository.UpdateAsync(user);

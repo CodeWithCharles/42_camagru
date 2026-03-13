@@ -6,6 +6,8 @@ services:
       POSTGRES_DB: ${POSTGRES_DB}
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    ports:
+      - "5432:5432"
     volumes:
       - db_data:/var/lib/postgresql/data
     healthcheck:
@@ -46,7 +48,7 @@ services:
       mailpit:
         condition: service_healthy
     volumes:
-      - ./uploads:/app/wwwroot/uploads
+      - ./uploads:/app/uploads
       - data_protection_keys:/root/.aspnet/DataProtection-Keys
 
 volumes:

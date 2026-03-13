@@ -4,6 +4,7 @@ public class User
 {
 	public int Id { get; set; }
 	public required string Username { get; set; }
+	public string? DisplayName { get; set; }
 	public required string Email { get; set; }
 	public required string PasswordHash { get; set; }
 	public bool IsConfirmed { get; set; } = false;
@@ -11,7 +12,10 @@ public class User
 	public string? ResetToken { get; set; }
 	public DateTime? ResetTokenExpiry { get; set; }
 	public bool EmailNotificationsEnabled { get; set; } = true;
+	public string? Bio { get; set; }
+	public int? AvatarImageId { get; set; }
 	public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+	public Image AvatarImage { get; set; } = null!;
 	public ICollection<Post> Posts { get; set; } = new List<Post>();
 	public ICollection<Image> Images { get; set; } = new List<Image>();
 	public ICollection<Comment> Comments { get; set; } = new List<Comment>();

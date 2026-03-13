@@ -14,6 +14,7 @@ public class AppDbContext : DbContext
     public DbSet<Comment> Comments => Set<Comment>();
     public DbSet<Like> Likes => Set<Like>();
     public DbSet<Post> Posts => Set<Post>();
+    public DbSet<Overlay> Overlays => Set<Overlay>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -49,6 +50,14 @@ public class AppDbContext : DbContext
 
             entity.Property(u => u.EmailNotificationsEnabled)
                 .IsRequired();
+
+            entity.Property(u => u.DisplayName)
+                .HasMaxLength(30);
+
+            entity.Property(u => u.Bio)
+                .HasMaxLength(500);
+
+            entity.Property(u => u.AvatarImageId);
 
             entity.Property(u => u.CreatedAt)
                 .IsRequired();
@@ -97,6 +106,9 @@ public class AppDbContext : DbContext
                 .IsRequired()
                 .HasMaxLength(2000);
 
+            entity.Property(p => p.CreatedAt)
+                .IsRequired();
+
             // Relationships with cascade delete
             entity.HasOne(p => p.User)
                 .WithMany(u => u.Posts)
@@ -130,6 +142,9 @@ public class AppDbContext : DbContext
             entity.Property(i => i.FilePath)
                 .IsRequired()
                 .HasMaxLength(500);
+
+            entity.Property(i => i.DisplayOrder)
+                .IsRequired();
 
             entity.Property(i => i.CreatedAt)
                 .IsRequired();
@@ -196,6 +211,30 @@ public class AppDbContext : DbContext
                 .WithMany(u => u.Likes)
                 .HasForeignKey(l => l.UserId)
                 .OnDelete(DeleteBehavior.Cascade);
+        });
+
+        // Overlay entity configuration
+        modelBuilder.Entity<Overlay>(entity =>
+        {
+            entity.HasKey(o => o.Id);
+
+            entity.Property(o => o.Name)
+                .IsRequired()
+                .HasMaxLength(100);
+
+            entity.Property(o => o.Category)
+                .IsRequired()
+                .HasMaxLength(50);
+
+            entity.Property(o => o.FilePath)
+                .IsRequired()
+                .HasMaxLength(500);
+
+            entity.Property(o => o.DisplayOrder)
+                .IsRequired();
+
+            entity.Property(o => o.CreatedAt)
+                .IsRequired();
         });
     }
 }

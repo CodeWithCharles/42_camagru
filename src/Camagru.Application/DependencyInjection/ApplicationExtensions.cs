@@ -1,4 +1,5 @@
 using Camagru.Application.UseCases.Auth;
+using Camagru.Application.UseCases.Posts;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Camagru.Application.DependencyInjection;
@@ -13,6 +14,12 @@ public static class ApplicationExtensions
         services.AddScoped<RequestPasswordResetUseCase>();
         services.AddScoped<ResetPasswordUseCase>();
         services.AddScoped<UpdateProfileUseCase>();
+        services.AddScoped<GetUserProfileUseCase>();
+        services.AddScoped<ChangePasswordUseCase>();
+        services.AddScoped<ChangeEmailUseCase>();
+        services.AddScoped<DeleteAccountUseCase>();
+        services.AddScoped<UpdateNotificationPreferencesUseCase>();
+        services.AddScoped<GetAvailableOverlaysUseCase>();
 
         return services;
     }

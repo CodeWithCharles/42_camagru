@@ -4,6 +4,7 @@ using Camagru.Infrastructure.Options;
 using Camagru.Infrastructure.Persistence;
 using Camagru.Infrastructure.Persistence.Repositories;
 using Camagru.Infrastructure.Services;
+using Camagru.Infrastructure.UseCases.Posts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
@@ -17,6 +18,12 @@ public static class PersistenceExtensions
 		var persistenceOptions = GenerateOptions();
 		services.AddSingleton(persistenceOptions);
 
+		// Register UploadsOptions
+		services.Configure<UploadsOptions>(options =>
+		{
+			options.DirectoryPath = Path.Combine(AppContext.BaseDirectory, "uploads");
+		});
+
 		services.AddDbContext<AppDbContext>((serviceProvider, options) =>
 		{
 			var opts = serviceProvider.GetRequiredService<PersistenceOptions>();
@@ -28,6 +35,8 @@ public static class PersistenceExtensions
 		services.AddScoped<ICommentRepository, CommentRepository>();
 		services.AddScoped<IImageRepository, ImageRepository>();
 		services.AddScoped<IPostRepository, PostRepository>();
+		services.AddScoped<IOverlayRepository, OverlayRepository>();
+		services.AddScoped<CreatePostUseCase>();
 
 		return services;
 	}
