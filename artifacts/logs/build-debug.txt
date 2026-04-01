@@ -1,0 +1,221 @@
+Build started 04/01/2026 14:51:36.
+Project "/home/rhamiel/camagru/Camagru.slnx" on node 1 (Restore target(s)).
+ValidateSolutionConfiguration:
+  Building solution configuration "Debug|Any CPU".
+_GetAllRestoreProjectPathItems:
+  Determining projects to restore...
+Project "/home/rhamiel/camagru/Camagru.slnx" (1) is building "/home/rhamiel/camagru/src/Camagru.Domain/Camagru.Domain.csproj" (3:6) on node 1 (_GenerateProjectRestoreGraph target(s)).
+AddPrunePackageReferences:
+  Loading prune package data from PrunePackageData folder
+  Failed to load prune package data from PrunePackageData folder, loading from targeting packs instead
+  Looking for targeting packs in /usr/share/dotnet/packs/Microsoft.NETCore.App.Ref
+  Pack directories found: /usr/share/dotnet/packs/Microsoft.NETCore.App.Ref/10.0.4
+  Found package overrides file /usr/share/dotnet/packs/Microsoft.NETCore.App.Ref/10.0.4/data/PackageOverrides.txt
+Done Building Project "/home/rhamiel/camagru/src/Camagru.Domain/Camagru.Domain.csproj" (_GenerateProjectRestoreGraph target(s)).
+Project "/home/rhamiel/camagru/Camagru.slnx" (1) is building "/home/rhamiel/camagru/src/Camagru.Web/Camagru.Web.csproj" (5:5) on node 1 (_GenerateProjectRestoreGraph target(s)).
+AddPrunePackageReferences:
+  Loading prune package data from PrunePackageData folder
+  Failed to load prune package data from PrunePackageData folder, loading from targeting packs instead
+  Looking for targeting packs in /usr/share/dotnet/packs/Microsoft.NETCore.App.Ref
+  Pack directories found: /usr/share/dotnet/packs/Microsoft.NETCore.App.Ref/10.0.4
+  Found package overrides file /usr/share/dotnet/packs/Microsoft.NETCore.App.Ref/10.0.4/data/PackageOverrides.txt
+  Loading prune package data from PrunePackageData folder
+  Failed to load prune package data from PrunePackageData folder, loading from targeting packs instead
+  Looking for targeting packs in /usr/share/dotnet/packs/Microsoft.AspNetCore.App.Ref
+  Pack directories found: /usr/share/dotnet/packs/Microsoft.AspNetCore.App.Ref/10.0.4
+  Found package overrides file /usr/share/dotnet/packs/Microsoft.AspNetCore.App.Ref/10.0.4/data/PackageOverrides.txt
+Done Building Project "/home/rhamiel/camagru/src/Camagru.Web/Camagru.Web.csproj" (_GenerateProjectRestoreGraph target(s)).
+Restore:
+  X.509 certificate chain validation will use the fallback certificate bundle at '/usr/share/dotnet/sdk/10.0.200/trustedroots/codesignctl.pem'.
+  X.509 certificate chain validation will use the fallback certificate bundle at '/usr/share/dotnet/sdk/10.0.200/trustedroots/timestampctl.pem'.
+  Assets file has not changed. Skipping assets file writing. Path: /home/rhamiel/camagru/src/Camagru.Web/obj/project.assets.json
+  Assets file has not changed. Skipping assets file writing. Path: /home/rhamiel/camagru/src/Camagru.Infrastructure/obj/project.assets.json
+  Assets file has not changed. Skipping assets file writing. Path: /home/rhamiel/camagru/src/Camagru.Domain/obj/project.assets.json
+  Assets file has not changed. Skipping assets file writing. Path: /home/rhamiel/camagru/src/Camagru.Application/obj/project.assets.json
+  Restored /home/rhamiel/camagru/src/Camagru.Web/Camagru.Web.csproj (in 52 ms).
+  Restored /home/rhamiel/camagru/src/Camagru.Application/Camagru.Application.csproj (in 52 ms).
+  Restored /home/rhamiel/camagru/src/Camagru.Infrastructure/Camagru.Infrastructure.csproj (in 52 ms).
+  Restored /home/rhamiel/camagru/src/Camagru.Domain/Camagru.Domain.csproj (in 52 ms).
+  
+  NuGet Config files used:
+      /home/rhamiel/.nuget/NuGet/NuGet.Config
+  
+  Feeds used:
+      https://api.nuget.org/v3/index.json
+  All projects are up-to-date for restore.
+Done Building Project "/home/rhamiel/camagru/Camagru.slnx" (Restore target(s)).
+Project "/home/rhamiel/camagru/Camagru.slnx" on node 1 (default targets).
+ValidateSolutionConfiguration:
+  Building solution configuration "Debug|Any CPU".
+Project "/home/rhamiel/camagru/Camagru.slnx" (1:2) is building "/home/rhamiel/camagru/src/Camagru.Application/Camagru.Application.csproj" (2:8) on node 1 (default targets).
+Project "/home/rhamiel/camagru/src/Camagru.Application/Camagru.Application.csproj" (2:8) is building "/home/rhamiel/camagru/src/Camagru.Domain/Camagru.Domain.csproj" (3:8) on node 1 (default targets).
+GenerateTargetFrameworkMonikerAttribute:
+Skipping target "GenerateTargetFrameworkMonikerAttribute" because all output files are up-to-date with respect to the input files.
+CoreGenerateAssemblyInfo:
+Skipping target "CoreGenerateAssemblyInfo" because all output files are up-to-date with respect to the input files.
+_GenerateSourceLinkFile:
+  Source Link file 'obj/Debug/net10.0/Camagru.Domain.sourcelink.json' is up-to-date.
+CoreCompile:
+Skipping target "CoreCompile" because all output files are up-to-date with respect to the input files.
+GenerateBuildDependencyFile:
+Skipping target "GenerateBuildDependencyFile" because all output files are up-to-date with respect to the input files.
+CopyFilesToOutputDirectory:
+  Camagru.Domain -> /home/rhamiel/camagru/src/Camagru.Domain/bin/Debug/net10.0/Camagru.Domain.dll
+Done Building Project "/home/rhamiel/camagru/src/Camagru.Domain/Camagru.Domain.csproj" (default targets).
+GenerateTargetFrameworkMonikerAttribute:
+Skipping target "GenerateTargetFrameworkMonikerAttribute" because all output files are up-to-date with respect to the input files.
+CoreGenerateAssemblyInfo:
+Skipping target "CoreGenerateAssemblyInfo" because all output files are up-to-date with respect to the input files.
+_GenerateSourceLinkFile:
+  Source Link file 'obj/Debug/net10.0/Camagru.Application.sourcelink.json' is up-to-date.
+CoreCompile:
+Skipping target "CoreCompile" because all output files are up-to-date with respect to the input files.
+GenerateBuildDependencyFile:
+Skipping target "GenerateBuildDependencyFile" because all output files are up-to-date with respect to the input files.
+CopyFilesToOutputDirectory:
+  Camagru.Application -> /home/rhamiel/camagru/src/Camagru.Application/bin/Debug/net10.0/Camagru.Application.dll
+Done Building Project "/home/rhamiel/camagru/src/Camagru.Application/Camagru.Application.csproj" (default targets).
+Project "/home/rhamiel/camagru/Camagru.slnx" (1:2) is building "/home/rhamiel/camagru/src/Camagru.Infrastructure/Camagru.Infrastructure.csproj" (4:7) on node 1 (default targets).
+GenerateTargetFrameworkMonikerAttribute:
+Skipping target "GenerateTargetFrameworkMonikerAttribute" because all output files are up-to-date with respect to the input files.
+CoreGenerateAssemblyInfo:
+Skipping target "CoreGenerateAssemblyInfo" because all output files are up-to-date with respect to the input files.
+_GenerateSourceLinkFile:
+  Source Link file 'obj/Debug/net10.0/Camagru.Infrastructure.sourcelink.json' is up-to-date.
+CoreCompile:
+Skipping target "CoreCompile" because all output files are up-to-date with respect to the input files.
+GenerateBuildDependencyFile:
+Skipping target "GenerateBuildDependencyFile" because all output files are up-to-date with respect to the input files.
+CopyFilesToOutputDirectory:
+  Camagru.Infrastructure -> /home/rhamiel/camagru/src/Camagru.Infrastructure/bin/Debug/net10.0/Camagru.Infrastructure.dll
+Done Building Project "/home/rhamiel/camagru/src/Camagru.Infrastructure/Camagru.Infrastructure.csproj" (default targets).
+Project "/home/rhamiel/camagru/Camagru.slnx" (1:2) is building "/home/rhamiel/camagru/src/Camagru.Web/Camagru.Web.csproj" (5:6) on node 1 (default targets).
+GenerateTargetFrameworkMonikerAttribute:
+Skipping target "GenerateTargetFrameworkMonikerAttribute" because all output files are up-to-date with respect to the input files.
+CoreGenerateAssemblyInfo:
+Skipping target "CoreGenerateAssemblyInfo" because all output files are up-to-date with respect to the input files.
+_DiscoverMvcApplicationParts:
+Skipping target "_DiscoverMvcApplicationParts" because all output files are up-to-date with respect to the input files.
+_CoreGenerateRazorAssemblyInfo:
+Skipping target "_CoreGenerateRazorAssemblyInfo" because all output files are up-to-date with respect to the input files.
+_GenerateSourceLinkFile:
+  Source Link file 'obj/Debug/net10.0/Camagru.Web.sourcelink.json' is up-to-date.
+CoreCompile:
+Skipping target "CoreCompile" because all output files are up-to-date with respect to the input files.
+_CreateAppHost:
+Skipping target "_CreateAppHost" because all output files are up-to-date with respect to the input files.
+_ProcessScopedCssFiles:
+Skipping target "_ProcessScopedCssFiles" because it has no outputs.
+_ProcessScopedCssFiles:
+Skipping target "_ProcessScopedCssFiles" because it has no outputs.
+ResolveBuildCompressedStaticWebAssetsConfiguration:
+  Accepted compressed asset '/home/rhamiel/camagru/src/Camagru.Web/obj/Debug/net10.0/compressed/snzjmvrvy9-{0}-v4mgi7hy1o-v4mgi7hy1o.gz' for '/home/rhamiel/camagru/src/Camagru.Web/wwwroot/css/00-settings/typography.css'.
+  Accepted compressed asset '/home/rhamiel/camagru/src/Camagru.Web/obj/Debug/net10.0/compressed/2mvwhelspz-{0}-1u0sxxqrpo-1u0sxxqrpo.gz' for '/home/rhamiel/camagru/src/Camagru.Web/wwwroot/css/00-settings/variables.css'.
+  Accepted compressed asset '/home/rhamiel/camagru/src/Camagru.Web/obj/Debug/net10.0/compressed/5izlwz0ssz-{0}-qbor6nysu2-qbor6nysu2.gz' for '/home/rhamiel/camagru/src/Camagru.Web/wwwroot/css/01-tools/utilities.css'.
+  Accepted compressed asset '/home/rhamiel/camagru/src/Camagru.Web/obj/Debug/net10.0/compressed/v5m9okk7an-{0}-qi71uy9i7c-qi71uy9i7c.gz' for '/home/rhamiel/camagru/src/Camagru.Web/wwwroot/css/02-generic/reset.css'.
+  Accepted compressed asset '/home/rhamiel/camagru/src/Camagru.Web/obj/Debug/net10.0/compressed/hp2500jpak-{0}-obx0iqdrtm-obx0iqdrtm.gz' for '/home/rhamiel/camagru/src/Camagru.Web/wwwroot/css/03-elements/base.css'.
+  Accepted compressed asset '/home/rhamiel/camagru/src/Camagru.Web/obj/Debug/net10.0/compressed/1kah2oocw7-{0}-ky8batdbj7-ky8batdbj7.gz' for '/home/rhamiel/camagru/src/Camagru.Web/wwwroot/css/04-objects/container.css'.
+  Accepted compressed asset '/home/rhamiel/camagru/src/Camagru.Web/obj/Debug/net10.0/compressed/ucy3qlvrhj-{0}-oeou1nb67f-oeou1nb67f.gz' for '/home/rhamiel/camagru/src/Camagru.Web/wwwroot/css/04-objects/grid.css'.
+  Accepted compressed asset '/home/rhamiel/camagru/src/Camagru.Web/obj/Debug/net10.0/compressed/bah3sjzlyl-{0}-42kfskicp5-42kfskicp5.gz' for '/home/rhamiel/camagru/src/Camagru.Web/wwwroot/css/04-objects/stack.css'.
+  Accepted compressed asset '/home/rhamiel/camagru/src/Camagru.Web/obj/Debug/net10.0/compressed/knrda95no5-{0}-or5ghfm7uu-or5ghfm7uu.gz' for '/home/rhamiel/camagru/src/Camagru.Web/wwwroot/css/05-components/button.css'.
+  Accepted compressed asset '/home/rhamiel/camagru/src/Camagru.Web/obj/Debug/net10.0/compressed/9uzwfyum7o-{0}-ajqnxp9m1m-ajqnxp9m1m.gz' for '/home/rhamiel/camagru/src/Camagru.Web/wwwroot/css/05-components/card.css'.
+  Accepted compressed asset '/home/rhamiel/camagru/src/Camagru.Web/obj/Debug/net10.0/compressed/152imkk5go-{0}-hm5ga4ccq6-hm5ga4ccq6.gz' for '/home/rhamiel/camagru/src/Camagru.Web/wwwroot/css/05-components/carousel.css'.
+  Accepted compressed asset '/home/rhamiel/camagru/src/Camagru.Web/obj/Debug/net10.0/compressed/1td5gbpxmd-{0}-udd23ks9ky-udd23ks9ky.gz' for '/home/rhamiel/camagru/src/Camagru.Web/wwwroot/css/05-components/editor-overlay-frame.css'.
+  Accepted compressed asset '/home/rhamiel/camagru/src/Camagru.Web/obj/Debug/net10.0/compressed/l2yvq82voq-{0}-cb8atfgwfl-cb8atfgwfl.gz' for '/home/rhamiel/camagru/src/Camagru.Web/wwwroot/css/05-components/input.css'.
+  Accepted compressed asset '/home/rhamiel/camagru/src/Camagru.Web/obj/Debug/net10.0/compressed/lcjhe7hrse-{0}-d2okiw3ta3-d2okiw3ta3.gz' for '/home/rhamiel/camagru/src/Camagru.Web/wwwroot/css/05-components/layer-panel.css'.
+  Accepted compressed asset '/home/rhamiel/camagru/src/Camagru.Web/obj/Debug/net10.0/compressed/j0a6pgu1c7-{0}-m81i1u6jnb-m81i1u6jnb.gz' for '/home/rhamiel/camagru/src/Camagru.Web/wwwroot/css/05-components/modal.css'.
+  Accepted compressed asset '/home/rhamiel/camagru/src/Camagru.Web/obj/Debug/net10.0/compressed/ddbmzro286-{0}-h9doqmrtd8-h9doqmrtd8.gz' for '/home/rhamiel/camagru/src/Camagru.Web/wwwroot/css/05-components/pagination.css'.
+  Accepted compressed asset '/home/rhamiel/camagru/src/Camagru.Web/obj/Debug/net10.0/compressed/lnagvrzjn2-{0}-d7rwwvddlt-d7rwwvddlt.gz' for '/home/rhamiel/camagru/src/Camagru.Web/wwwroot/css/05-components/toast.css'.
+  Accepted compressed asset '/home/rhamiel/camagru/src/Camagru.Web/obj/Debug/net10.0/compressed/oh3jascqbl-{0}-s4klzy43dg-s4klzy43dg.gz' for '/home/rhamiel/camagru/src/Camagru.Web/wwwroot/css/06-pages/auth.css'.
+  Accepted compressed asset '/home/rhamiel/camagru/src/Camagru.Web/obj/Debug/net10.0/compressed/61ctsetfi8-{0}-66drkipi2i-66drkipi2i.gz' for '/home/rhamiel/camagru/src/Camagru.Web/wwwroot/css/06-pages/editor.css'.
+  Accepted compressed asset '/home/rhamiel/camagru/src/Camagru.Web/obj/Debug/net10.0/compressed/4tqof6k46q-{0}-4b346phk2g-4b346phk2g.gz' for '/home/rhamiel/camagru/src/Camagru.Web/wwwroot/css/06-pages/gallery.css'.
+  Accepted compressed asset '/home/rhamiel/camagru/src/Camagru.Web/obj/Debug/net10.0/compressed/vzfd6x6g39-{0}-bqe9v2dyv5-bqe9v2dyv5.gz' for '/home/rhamiel/camagru/src/Camagru.Web/wwwroot/css/06-pages/profile.css'.
+  Accepted compressed asset '/home/rhamiel/camagru/src/Camagru.Web/obj/Debug/net10.0/compressed/z22rfh1ykg-{0}-819459jewv-819459jewv.gz' for '/home/rhamiel/camagru/src/Camagru.Web/wwwroot/css/app.css'.
+  Accepted compressed asset '/home/rhamiel/camagru/src/Camagru.Web/obj/Debug/net10.0/compressed/n00dkjbmt9-{0}-61n19gt1b8-61n19gt1b8.gz' for '/home/rhamiel/camagru/src/Camagru.Web/wwwroot/favicon.ico'.
+  Accepted compressed asset '/home/rhamiel/camagru/src/Camagru.Web/obj/Debug/net10.0/compressed/1wgbzet9tu-{0}-biupxelum8-biupxelum8.gz' for '/home/rhamiel/camagru/src/Camagru.Web/wwwroot/images/mock-gallery/orbit-01.svg'.
+  Accepted compressed asset '/home/rhamiel/camagru/src/Camagru.Web/obj/Debug/net10.0/compressed/au5c41uqqo-{0}-tjrtx9619m-tjrtx9619m.gz' for '/home/rhamiel/camagru/src/Camagru.Web/wwwroot/images/mock-gallery/orbit-02.svg'.
+  Accepted compressed asset '/home/rhamiel/camagru/src/Camagru.Web/obj/Debug/net10.0/compressed/t6yh725kqd-{0}-yslrhbd2mv-yslrhbd2mv.gz' for '/home/rhamiel/camagru/src/Camagru.Web/wwwroot/images/mock-gallery/orbit-03.svg'.
+  Accepted compressed asset '/home/rhamiel/camagru/src/Camagru.Web/obj/Debug/net10.0/compressed/djb49n9k1h-{0}-rln68epzcp-rln68epzcp.gz' for '/home/rhamiel/camagru/src/Camagru.Web/wwwroot/images/mock-gallery/orbit-04.svg'.
+  Accepted compressed asset '/home/rhamiel/camagru/src/Camagru.Web/obj/Debug/net10.0/compressed/0j3ryujx7u-{0}-4z5ezhk3o9-4z5ezhk3o9.gz' for '/home/rhamiel/camagru/src/Camagru.Web/wwwroot/images/mock-gallery/orbit-05.svg'.
+  Accepted compressed asset '/home/rhamiel/camagru/src/Camagru.Web/obj/Debug/net10.0/compressed/rwcqpvvn3t-{0}-t844uqtsbc-t844uqtsbc.gz' for '/home/rhamiel/camagru/src/Camagru.Web/wwwroot/images/mock-gallery/orbit-06.svg'.
+  Accepted compressed asset '/home/rhamiel/camagru/src/Camagru.Web/obj/Debug/net10.0/compressed/jo04ptqech-{0}-at3vs4tbui-at3vs4tbui.gz' for '/home/rhamiel/camagru/src/Camagru.Web/wwwroot/js/app.js'.
+  Accepted compressed asset '/home/rhamiel/camagru/src/Camagru.Web/obj/Debug/net10.0/compressed/tz6476n3iv-{0}-89cdfq8ttz-89cdfq8ttz.gz' for '/home/rhamiel/camagru/src/Camagru.Web/wwwroot/js/components/carousel.js'.
+  Accepted compressed asset '/home/rhamiel/camagru/src/Camagru.Web/obj/Debug/net10.0/compressed/ydcjjn24ta-{0}-veivt5iphb-veivt5iphb.gz' for '/home/rhamiel/camagru/src/Camagru.Web/wwwroot/js/components/modal.js'.
+  Accepted compressed asset '/home/rhamiel/camagru/src/Camagru.Web/obj/Debug/net10.0/compressed/4b9y44hfy2-{0}-jytnttvxnl-jytnttvxnl.gz' for '/home/rhamiel/camagru/src/Camagru.Web/wwwroot/js/components/toast.js'.
+  Accepted compressed asset '/home/rhamiel/camagru/src/Camagru.Web/obj/Debug/net10.0/compressed/vco0uxe8zk-{0}-gr8dfx64ol-gr8dfx64ol.gz' for '/home/rhamiel/camagru/src/Camagru.Web/wwwroot/js/core/dom.js'.
+  Accepted compressed asset '/home/rhamiel/camagru/src/Camagru.Web/obj/Debug/net10.0/compressed/s67tunen1d-{0}-fdvj010szz-fdvj010szz.gz' for '/home/rhamiel/camagru/src/Camagru.Web/wwwroot/js/core/events.js'.
+  Accepted compressed asset '/home/rhamiel/camagru/src/Camagru.Web/obj/Debug/net10.0/compressed/9jfp8q81pq-{0}-h1dfsxq9y6-h1dfsxq9y6.gz' for '/home/rhamiel/camagru/src/Camagru.Web/wwwroot/js/core/focusTrap.js'.
+  Accepted compressed asset '/home/rhamiel/camagru/src/Camagru.Web/obj/Debug/net10.0/compressed/rhc0x75g72-{0}-oym2n1lsi0-oym2n1lsi0.gz' for '/home/rhamiel/camagru/src/Camagru.Web/wwwroot/js/core/storage.js'.
+  Accepted compressed asset '/home/rhamiel/camagru/src/Camagru.Web/obj/Debug/net10.0/compressed/0kiqfc40m7-{0}-c243avcd5v-c243avcd5v.gz' for '/home/rhamiel/camagru/src/Camagru.Web/wwwroot/js/editor/capture.js'.
+  Accepted compressed asset '/home/rhamiel/camagru/src/Camagru.Web/obj/Debug/net10.0/compressed/hir9u7w00p-{0}-dwhdia21rz-dwhdia21rz.gz' for '/home/rhamiel/camagru/src/Camagru.Web/wwwroot/js/editor/dragResize.js'.
+  Accepted compressed asset '/home/rhamiel/camagru/src/Camagru.Web/obj/Debug/net10.0/compressed/nlei6js8wi-{0}-8bolslu64z-8bolslu64z.gz' for '/home/rhamiel/camagru/src/Camagru.Web/wwwroot/js/editor/layersPanel.js'.
+  Accepted compressed asset '/home/rhamiel/camagru/src/Camagru.Web/obj/Debug/net10.0/compressed/mhisjxcd7a-{0}-4lk8o05qn0-4lk8o05qn0.gz' for '/home/rhamiel/camagru/src/Camagru.Web/wwwroot/js/editor/overlayManager.js'.
+  Accepted compressed asset '/home/rhamiel/camagru/src/Camagru.Web/obj/Debug/net10.0/compressed/y8pfigz5x9-{0}-mhq242qhqa-mhq242qhqa.gz' for '/home/rhamiel/camagru/src/Camagru.Web/wwwroot/js/pages/auth.page.js'.
+  Accepted compressed asset '/home/rhamiel/camagru/src/Camagru.Web/obj/Debug/net10.0/compressed/l2wwjl6jke-{0}-1l4qvya3wz-1l4qvya3wz.gz' for '/home/rhamiel/camagru/src/Camagru.Web/wwwroot/js/pages/editor.page.js'.
+  Accepted compressed asset '/home/rhamiel/camagru/src/Camagru.Web/obj/Debug/net10.0/compressed/gvmtwrcgff-{0}-jbrz094ani-jbrz094ani.gz' for '/home/rhamiel/camagru/src/Camagru.Web/wwwroot/js/pages/gallery.page.js'.
+  Accepted compressed asset '/home/rhamiel/camagru/src/Camagru.Web/obj/Debug/net10.0/compressed/p3gfggg5ev-{0}-he6zqpsk1k-he6zqpsk1k.gz' for '/home/rhamiel/camagru/src/Camagru.Web/wwwroot/js/pages/profile.page.js'.
+  Resolved 45 compressed assets for 45 candidate assets.
+ResolveBuildCompressedStaticWebAssets:
+  Processing compressed asset: /home/rhamiel/camagru/src/Camagru.Web/obj/Debug/net10.0/compressed/snzjmvrvy9-{0}-v4mgi7hy1o-v4mgi7hy1o.gz
+  Processing compressed asset: /home/rhamiel/camagru/src/Camagru.Web/obj/Debug/net10.0/compressed/2mvwhelspz-{0}-1u0sxxqrpo-1u0sxxqrpo.gz
+  Processing compressed asset: /home/rhamiel/camagru/src/Camagru.Web/obj/Debug/net10.0/compressed/5izlwz0ssz-{0}-qbor6nysu2-qbor6nysu2.gz
+  Processing compressed asset: /home/rhamiel/camagru/src/Camagru.Web/obj/Debug/net10.0/compressed/v5m9okk7an-{0}-qi71uy9i7c-qi71uy9i7c.gz
+  Processing compressed asset: /home/rhamiel/camagru/src/Camagru.Web/obj/Debug/net10.0/compressed/hp2500jpak-{0}-obx0iqdrtm-obx0iqdrtm.gz
+  Processing compressed asset: /home/rhamiel/camagru/src/Camagru.Web/obj/Debug/net10.0/compressed/1kah2oocw7-{0}-ky8batdbj7-ky8batdbj7.gz
+  Processing compressed asset: /home/rhamiel/camagru/src/Camagru.Web/obj/Debug/net10.0/compressed/ucy3qlvrhj-{0}-oeou1nb67f-oeou1nb67f.gz
+  Processing compressed asset: /home/rhamiel/camagru/src/Camagru.Web/obj/Debug/net10.0/compressed/bah3sjzlyl-{0}-42kfskicp5-42kfskicp5.gz
+  Processing compressed asset: /home/rhamiel/camagru/src/Camagru.Web/obj/Debug/net10.0/compressed/knrda95no5-{0}-or5ghfm7uu-or5ghfm7uu.gz
+  Processing compressed asset: /home/rhamiel/camagru/src/Camagru.Web/obj/Debug/net10.0/compressed/9uzwfyum7o-{0}-ajqnxp9m1m-ajqnxp9m1m.gz
+  Processing compressed asset: /home/rhamiel/camagru/src/Camagru.Web/obj/Debug/net10.0/compressed/152imkk5go-{0}-hm5ga4ccq6-hm5ga4ccq6.gz
+  Processing compressed asset: /home/rhamiel/camagru/src/Camagru.Web/obj/Debug/net10.0/compressed/1td5gbpxmd-{0}-udd23ks9ky-udd23ks9ky.gz
+  Processing compressed asset: /home/rhamiel/camagru/src/Camagru.Web/obj/Debug/net10.0/compressed/l2yvq82voq-{0}-cb8atfgwfl-cb8atfgwfl.gz
+  Processing compressed asset: /home/rhamiel/camagru/src/Camagru.Web/obj/Debug/net10.0/compressed/lcjhe7hrse-{0}-d2okiw3ta3-d2okiw3ta3.gz
+  Processing compressed asset: /home/rhamiel/camagru/src/Camagru.Web/obj/Debug/net10.0/compressed/j0a6pgu1c7-{0}-m81i1u6jnb-m81i1u6jnb.gz
+  Processing compressed asset: /home/rhamiel/camagru/src/Camagru.Web/obj/Debug/net10.0/compressed/ddbmzro286-{0}-h9doqmrtd8-h9doqmrtd8.gz
+  Processing compressed asset: /home/rhamiel/camagru/src/Camagru.Web/obj/Debug/net10.0/compressed/lnagvrzjn2-{0}-d7rwwvddlt-d7rwwvddlt.gz
+  Processing compressed asset: /home/rhamiel/camagru/src/Camagru.Web/obj/Debug/net10.0/compressed/oh3jascqbl-{0}-s4klzy43dg-s4klzy43dg.gz
+  Processing compressed asset: /home/rhamiel/camagru/src/Camagru.Web/obj/Debug/net10.0/compressed/61ctsetfi8-{0}-66drkipi2i-66drkipi2i.gz
+  Processing compressed asset: /home/rhamiel/camagru/src/Camagru.Web/obj/Debug/net10.0/compressed/4tqof6k46q-{0}-4b346phk2g-4b346phk2g.gz
+  Processing compressed asset: /home/rhamiel/camagru/src/Camagru.Web/obj/Debug/net10.0/compressed/vzfd6x6g39-{0}-bqe9v2dyv5-bqe9v2dyv5.gz
+  Processing compressed asset: /home/rhamiel/camagru/src/Camagru.Web/obj/Debug/net10.0/compressed/z22rfh1ykg-{0}-819459jewv-819459jewv.gz
+  Processing compressed asset: /home/rhamiel/camagru/src/Camagru.Web/obj/Debug/net10.0/compressed/n00dkjbmt9-{0}-61n19gt1b8-61n19gt1b8.gz
+  Processing compressed asset: /home/rhamiel/camagru/src/Camagru.Web/obj/Debug/net10.0/compressed/1wgbzet9tu-{0}-biupxelum8-biupxelum8.gz
+  Processing compressed asset: /home/rhamiel/camagru/src/Camagru.Web/obj/Debug/net10.0/compressed/au5c41uqqo-{0}-tjrtx9619m-tjrtx9619m.gz
+  Processing compressed asset: /home/rhamiel/camagru/src/Camagru.Web/obj/Debug/net10.0/compressed/t6yh725kqd-{0}-yslrhbd2mv-yslrhbd2mv.gz
+  Processing compressed asset: /home/rhamiel/camagru/src/Camagru.Web/obj/Debug/net10.0/compressed/djb49n9k1h-{0}-rln68epzcp-rln68epzcp.gz
+  Processing compressed asset: /home/rhamiel/camagru/src/Camagru.Web/obj/Debug/net10.0/compressed/0j3ryujx7u-{0}-4z5ezhk3o9-4z5ezhk3o9.gz
+  Processing compressed asset: /home/rhamiel/camagru/src/Camagru.Web/obj/Debug/net10.0/compressed/rwcqpvvn3t-{0}-t844uqtsbc-t844uqtsbc.gz
+  Processing compressed asset: /home/rhamiel/camagru/src/Camagru.Web/obj/Debug/net10.0/compressed/jo04ptqech-{0}-at3vs4tbui-at3vs4tbui.gz
+  Processing compressed asset: /home/rhamiel/camagru/src/Camagru.Web/obj/Debug/net10.0/compressed/tz6476n3iv-{0}-89cdfq8ttz-89cdfq8ttz.gz
+  Processing compressed asset: /home/rhamiel/camagru/src/Camagru.Web/obj/Debug/net10.0/compressed/ydcjjn24ta-{0}-veivt5iphb-veivt5iphb.gz
+  Processing compressed asset: /home/rhamiel/camagru/src/Camagru.Web/obj/Debug/net10.0/compressed/4b9y44hfy2-{0}-jytnttvxnl-jytnttvxnl.gz
+  Processing compressed asset: /home/rhamiel/camagru/src/Camagru.Web/obj/Debug/net10.0/compressed/vco0uxe8zk-{0}-gr8dfx64ol-gr8dfx64ol.gz
+  Processing compressed asset: /home/rhamiel/camagru/src/Camagru.Web/obj/Debug/net10.0/compressed/s67tunen1d-{0}-fdvj010szz-fdvj010szz.gz
+  Processing compressed asset: /home/rhamiel/camagru/src/Camagru.Web/obj/Debug/net10.0/compressed/9jfp8q81pq-{0}-h1dfsxq9y6-h1dfsxq9y6.gz
+  Processing compressed asset: /home/rhamiel/camagru/src/Camagru.Web/obj/Debug/net10.0/compressed/rhc0x75g72-{0}-oym2n1lsi0-oym2n1lsi0.gz
+  Processing compressed asset: /home/rhamiel/camagru/src/Camagru.Web/obj/Debug/net10.0/compressed/0kiqfc40m7-{0}-c243avcd5v-c243avcd5v.gz
+  Processing compressed asset: /home/rhamiel/camagru/src/Camagru.Web/obj/Debug/net10.0/compressed/hir9u7w00p-{0}-dwhdia21rz-dwhdia21rz.gz
+  Processing compressed asset: /home/rhamiel/camagru/src/Camagru.Web/obj/Debug/net10.0/compressed/nlei6js8wi-{0}-8bolslu64z-8bolslu64z.gz
+  Processing compressed asset: /home/rhamiel/camagru/src/Camagru.Web/obj/Debug/net10.0/compressed/mhisjxcd7a-{0}-4lk8o05qn0-4lk8o05qn0.gz
+  Processing compressed asset: /home/rhamiel/camagru/src/Camagru.Web/obj/Debug/net10.0/compressed/y8pfigz5x9-{0}-mhq242qhqa-mhq242qhqa.gz
+  Processing compressed asset: /home/rhamiel/camagru/src/Camagru.Web/obj/Debug/net10.0/compressed/l2wwjl6jke-{0}-1l4qvya3wz-1l4qvya3wz.gz
+  Processing compressed asset: /home/rhamiel/camagru/src/Camagru.Web/obj/Debug/net10.0/compressed/gvmtwrcgff-{0}-jbrz094ani-jbrz094ani.gz
+  Processing compressed asset: /home/rhamiel/camagru/src/Camagru.Web/obj/Debug/net10.0/compressed/p3gfggg5ev-{0}-he6zqpsk1k-he6zqpsk1k.gz
+_BuildCopyStaticWebAssetsPreserveNewest:
+Skipping target "_BuildCopyStaticWebAssetsPreserveNewest" because it has no outputs.
+_CopyOutOfDateSourceItemsToOutputDirectory:
+Skipping target "_CopyOutOfDateSourceItemsToOutputDirectory" because all output files are up-to-date with respect to the input files.
+GenerateBuildDependencyFile:
+Skipping target "GenerateBuildDependencyFile" because all output files are up-to-date with respect to the input files.
+GenerateBuildRuntimeConfigurationFiles:
+Skipping target "GenerateBuildRuntimeConfigurationFiles" because all output files are up-to-date with respect to the input files.
+CopyFilesToOutputDirectory:
+  Camagru.Web -> /home/rhamiel/camagru/src/Camagru.Web/bin/Debug/net10.0/Camagru.Web.dll
+Done Building Project "/home/rhamiel/camagru/src/Camagru.Web/Camagru.Web.csproj" (default targets).
+Done Building Project "/home/rhamiel/camagru/Camagru.slnx" (default targets).
+
+Build succeeded.
+    0 Warning(s)
+    0 Error(s)
+
+Time Elapsed 00:00:01.71

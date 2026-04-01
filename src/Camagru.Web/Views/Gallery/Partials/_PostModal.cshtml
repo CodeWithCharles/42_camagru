@@ -16,13 +16,13 @@
 
         <div class="c-post-modal">
             <div class="c-post-modal__media">
-                <partial name="~/Views/Gallery/Partials/_Carousel.cshtml" model="new CarouselViewModel
+                <partial name="~/Views/Gallery/Partials/_Carousel.cshtml" model='new CarouselViewModel
                 {
-                    Id = $\"gallery-carousel-{Model.Id}\",
-                    AccessibleLabel = $\"Post {Model.Id} images\",
+                    Id = $"gallery-carousel-{Model.Id}",
+                    AccessibleLabel = $"Post {Model.Id} images",
                     ImageUrls = Model.ImageUrls,
-                    AltPrefix = $\"Post {Model.Id} image\"
-                }" />
+                    AltPrefix = $"Post {Model.Id} image"
+                }' />
             </div>
 
             <div class="c-post-modal__meta">

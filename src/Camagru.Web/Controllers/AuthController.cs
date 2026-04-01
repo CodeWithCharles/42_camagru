@@ -164,7 +164,7 @@ public class AuthController : Controller
                 model.ShowConfirmationFallback = true;
                 model.ConfirmationResendAvailable = _uiFeatureFlags.EnableConfirmationResend;
                 model.MissingConfirmationContractName = _uiFeatureFlags.EnableConfirmationResend ? null : "ResendConfirmationEmailUseCase";
-                ModelState.AddModelError("Form.Username", result.Error);
+                ModelState.AddModelError("Form.Username", result.Error ?? "Please confirm your email before logging in");
             }
             else
             {
@@ -333,13 +333,13 @@ public class AuthController : Controller
     {
         if (string.Equals(error, "Email already registered", StringComparison.OrdinalIgnoreCase))
         {
-            ModelState.AddModelError("Form.Email", error);
+            ModelState.AddModelError("Form.Email", error ?? "Email already registered");
             return;
         }
 
         if (string.Equals(error, "Username already taken", StringComparison.OrdinalIgnoreCase))
         {
-            ModelState.AddModelError("Form.Username", error);
+            ModelState.AddModelError("Form.Username", error ?? "Username already taken");
             return;
         }
 

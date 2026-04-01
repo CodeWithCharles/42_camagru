@@ -4,21 +4,21 @@
     ViewData["PageId"] = "auth";
 }
 
-<partial name="~/Views/Shared/Forms/_AuthCard.cshtml" model="new AuthCardViewModel
+<partial name="~/Views/Shared/Forms/_AuthCard.cshtml" model='new AuthCardViewModel
 {
-    Eyebrow = \"Access Node\",
-    Title = \"Launch a Camagru account\",
-    Intro = \"Create your profile, verify the email link, and unlock the editor when you are ready to stage montages.\",
-    FormPartialPath = \"~/Views/Auth/Partials/_RegisterForm.cshtml\",
+    Eyebrow = "Access Node",
+    Title = "Launch a Camagru account",
+    Intro = "Create your profile, verify the email link, and unlock the editor when you are ready to stage montages.",
+    FormPartialPath = "~/Views/Auth/Partials/_RegisterForm.cshtml",
     FormModel = Model,
-    SecondaryHint = \"Already connected to the network?\",
-    SecondaryLinkText = \"Sign in\",
-    SecondaryLinkUrl = Url.Action(\"Login\", \"Auth\") ?? \"/Auth/Login\",
-    AsideTitle = \"Account requirements\",
+    SecondaryHint = "Already connected to the network?",
+    SecondaryLinkText = "Sign in",
+    SecondaryLinkUrl = Url.Action("Login", "Auth") ?? "/Auth/Login",
+    AsideTitle = "Account requirements",
     AsidePoints = new[]
     {
-        \"Username, valid email, and a strong password are all required.\",
-        \"A confirmation link is sent immediately after registration.\",
-        \"Guests can browse the gallery, but posting and editing stay locked until sign-in.\"
+        "Username, valid email, and a strong password are all required.",
+        "A confirmation link is sent immediately after registration.",
+        "Guests can browse the gallery, but posting and editing stay locked until sign-in."
     }
-}" />
+}' />

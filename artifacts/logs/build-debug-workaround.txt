@@ -1,0 +1,11 @@
+Build started 04/01/2026 14:46:52.
+     1>Project "/home/rhamiel/camagru/Camagru.slnx" on node 1 (Restore target(s)).
+     1>ValidateSolutionConfiguration:
+         Building solution configuration "Debug|Any CPU".
+     1>Done Building Project "/home/rhamiel/camagru/Camagru.slnx" (Restore target(s)) -- FAILED.
+
+Build FAILED.
+    0 Warning(s)
+    0 Error(s)
+
+Time Elapsed 00:00:00.64

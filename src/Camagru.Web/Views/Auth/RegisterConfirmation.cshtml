@@ -12,24 +12,24 @@
 
         @if (!string.IsNullOrWhiteSpace(Model.Username))
         {
-            <partial name="~/Views/Shared/Forms/_FormField.cshtml" model="new FormFieldViewModel
+            <partial name="~/Views/Shared/Forms/_FormField.cshtml" model='new FormFieldViewModel
             {
-                Label = \"Username\",
-                Name = \"registered-username\",
+                Label = "Username",
+                Name = "registered-username",
                 Value = Model.Username!,
                 ReadOnly = true
-            }" />
+            }' />
         }
 
         @if (!string.IsNullOrWhiteSpace(Model.Email))
         {
-            <partial name="~/Views/Shared/Forms/_FormField.cshtml" model="new FormFieldViewModel
+            <partial name="~/Views/Shared/Forms/_FormField.cshtml" model='new FormFieldViewModel
             {
-                Label = \"Destination email\",
-                Name = \"registered-email\",
+                Label = "Destination email",
+                Name = "registered-email",
                 Value = Model.Email!,
                 ReadOnly = true
-            }" />
+            }' />
         }
 
         <div class="c-card__actions">

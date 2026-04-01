@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1080 1080">
+  <rect width="1080" height="1080" fill="#071116"/>
+  <rect x="140" y="160" width="800" height="760" rx="42" fill="#091c23" stroke="#4aece5" stroke-opacity=".28"/>
+  <g fill="#4aece5" fill-opacity=".18">
+    <circle cx="280" cy="340" r="36"/>
+    <circle cx="430" cy="490" r="72"/>
+    <circle cx="610" cy="360" r="54"/>
+    <circle cx="790" cy="560" r="96"/>
+  </g>
+  <text x="210" y="770" fill="#90f4a7" font-size="42" font-family="Arial, sans-serif">Orbit Session 06</text>
+  <text x="210" y="850" fill="#f2fffd" font-size="74" font-family="Arial, sans-serif">Friends Broadcast</text>
+</svg>

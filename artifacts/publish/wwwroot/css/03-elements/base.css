@@ -1,0 +1,219 @@
+body {
+    min-height: 100vh;
+    background:
+        radial-gradient(circle at top left, rgba(74, 236, 229, 0.12), transparent 26%),
+        radial-gradient(circle at top right, rgba(122, 184, 255, 0.14), transparent 22%),
+        linear-gradient(180deg, #031015 0%, #061419 42%, #040a0d 100%);
+    color: var(--color-text);
+    font-family: var(--font-body);
+    line-height: 1.6;
+}
+
+a {
+    color: inherit;
+    text-decoration: none;
+}
+
+img {
+    display: block;
+    max-width: 100%;
+}
+
+button,
+input,
+textarea,
+select {
+    font: inherit;
+}
+
+code,
+pre {
+    font-family: var(--font-mono);
+}
+
+:focus-visible {
+    outline: 2px solid var(--color-accent-cyan);
+    outline-offset: 3px;
+}
+
+.app-shell {
+    position: relative;
+    display: flex;
+    min-height: 100vh;
+    flex-direction: column;
+}
+
+.app-shell__veil {
+    position: fixed;
+    inset: 0;
+    background-image:
+        linear-gradient(rgba(74, 236, 229, 0.045) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(74, 236, 229, 0.045) 1px, transparent 1px);
+    background-size: 4rem 4rem;
+    mask-image: linear-gradient(180deg, rgba(0, 0, 0, 0.8), transparent 85%);
+    pointer-events: none;
+}
+
+.app-shell__main {
+    flex: 1;
+    padding: var(--space-5) 0 var(--space-6);
+}
+
+.c-site-nav {
+    position: sticky;
+    top: 0;
+    z-index: 40;
+    backdrop-filter: blur(18px);
+    background: rgba(4, 12, 15, 0.82);
+    border-bottom: 1px solid var(--color-border);
+}
+
+.c-site-nav__inner,
+.c-site-footer__inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-4);
+}
+
+.c-site-nav__inner {
+    min-height: 5rem;
+}
+
+.c-site-nav__brand {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+}
+
+.c-site-nav__brand-mark {
+    width: 2.5rem;
+    height: 2.5rem;
+    border-radius: 50%;
+    border: 2px solid var(--color-accent-cyan);
+    box-shadow: 0 0 0 6px rgba(74, 236, 229, 0.08);
+}
+
+.c-site-nav__brand-copy {
+    display: flex;
+    flex-direction: column;
+    font-family: var(--font-display);
+    line-height: 1.2;
+}
+
+.c-site-nav__brand-copy small,
+.c-site-nav__status,
+.c-site-footer__links a,
+.c-comment__meta span,
+.c-comment__meta small,
+.c-post-card__meta span,
+.c-post-card__meta small,
+.c-post-modal__handle {
+    color: var(--color-text-muted);
+}
+
+.c-site-nav__links,
+.c-site-nav__actions,
+.c-site-footer__links {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+}
+
+.c-site-nav__link {
+    padding: 0.55rem 0.9rem;
+    border-radius: 999px;
+    transition: background-color var(--transition-fast), color var(--transition-fast);
+}
+
+.c-site-nav__link.is-active,
+.c-site-nav__link:hover {
+    background: rgba(74, 236, 229, 0.08);
+    color: var(--color-accent-cyan);
+}
+
+.c-site-nav__logout {
+    margin: 0;
+}
+
+.c-site-footer {
+    border-top: 1px solid rgba(74, 236, 229, 0.14);
+    background: rgba(3, 9, 12, 0.78);
+    padding: var(--space-4) 0;
+}
+
+.c-site-footer__inner {
+    align-items: flex-start;
+}
+
+.c-site-footer p {
+    color: var(--color-text-muted);
+    max-width: 34rem;
+}
+
+.c-card__actions,
+.c-post-modal__actions,
+.c-post-modal__interaction-row,
+.p-gallery__hero-actions,
+.p-editor__workspace-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+}
+
+.c-inline-alert,
+.c-empty-state {
+    display: grid;
+    gap: 0.35rem;
+    padding: var(--space-3);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: var(--radius-md);
+    background: rgba(255, 255, 255, 0.03);
+}
+
+.c-inline-alert--warning {
+    border-color: rgba(255, 109, 109, 0.35);
+    color: #ffd6d6;
+}
+
+.c-empty-state--compact {
+    padding: var(--space-2);
+}
+
+.c-eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    font-family: var(--font-display);
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    font-size: 0.72rem;
+    color: var(--color-accent-cyan);
+}
+
+.c-eyebrow::before {
+    content: "";
+    width: 0.8rem;
+    height: 1px;
+    background: currentColor;
+}
+
+.p-status {
+    display: grid;
+    place-items: center;
+    min-height: 55vh;
+}
+
+@media (max-width: 64rem) {
+    .c-site-nav__inner,
+    .c-site-footer__inner {
+        flex-direction: column;
+        align-items: stretch;
+        padding-block: var(--space-3);
+    }
+
+    .c-site-nav__links,
+    .c-site-nav__actions {
+        flex-wrap: wrap;
+    }
+}

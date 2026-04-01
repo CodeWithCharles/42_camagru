@@ -1,0 +1,10 @@
+  Determining projects to restore...
+  All projects are up-to-date for restore.
+  Camagru.Domain -> /home/rhamiel/camagru/src/Camagru.Domain/bin/Debug/net10.0/Camagru.Domain.dll
+  Camagru.Application -> /home/rhamiel/camagru/src/Camagru.Application/bin/Debug/net10.0/Camagru.Application.dll
+
+Build succeeded.
+    0 Warning(s)
+    0 Error(s)
+
+Time Elapsed 00:00:01.76

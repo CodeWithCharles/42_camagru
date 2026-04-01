@@ -1,0 +1,11 @@
+Build started 04/01/2026 14:46:52.
+     1>Project "/home/rhamiel/camagru/src/Camagru.Web/Camagru.Web.csproj" on node 1 (Restore target(s)).
+     1>_GetAllRestoreProjectPathItems:
+         Determining projects to restore...
+     1>Done Building Project "/home/rhamiel/camagru/src/Camagru.Web/Camagru.Web.csproj" (Restore target(s)) -- FAILED.
+
+Build FAILED.
+    0 Warning(s)
+    0 Error(s)
+
+Time Elapsed 00:00:00.92

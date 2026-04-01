@@ -1,0 +1,22 @@
+.c-pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+    margin-top: var(--space-5);
+}
+
+.c-pagination__link {
+    min-width: 2.5rem;
+    padding: 0.7rem 0.95rem;
+    border-radius: 999px;
+    border: 1px solid rgba(74, 236, 229, 0.16);
+    background: rgba(74, 236, 229, 0.04);
+    text-align: center;
+}
+
+.c-pagination__link.is-current {
+    color: #041214;
+    background: linear-gradient(135deg, var(--color-accent-cyan), var(--color-accent-blue));
+}

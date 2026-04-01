@@ -132,9 +132,9 @@ public class GalleryController : Controller
     }
 
     [HttpGet("Empty")]
-    public IActionResult Empty()
+    public IActionResult EmptyState()
     {
-        return View(new EmptyGalleryViewModel
+        return View("Empty", new EmptyGalleryViewModel
         {
             IsAuthenticated = User.Identity?.IsAuthenticated ?? false,
             PrimaryActionText = User.Identity?.IsAuthenticated ?? false ? "Open editor" : "Create an account",

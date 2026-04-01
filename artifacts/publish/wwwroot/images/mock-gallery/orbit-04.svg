@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1080 1080">
+  <rect width="1080" height="1080" fill="#081419"/>
+  <rect x="120" y="180" width="840" height="720" rx="48" fill="#0b1d24" stroke="#4aece5" stroke-opacity=".22"/>
+  <path d="M220 780 360 560l130 90 180-250 170 190" fill="none" stroke="#4aece5" stroke-width="12" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle cx="360" cy="560" r="20" fill="#4aece5"/>
+  <circle cx="490" cy="650" r="20" fill="#90f4a7"/>
+  <circle cx="670" cy="400" r="20" fill="#7ab8ff"/>
+  <circle cx="840" cy="590" r="20" fill="#ff6d6d"/>
+  <text x="200" y="300" fill="#c8fffb" font-size="72" font-family="Arial, sans-serif">Telemetry Graph</text>
+</svg>

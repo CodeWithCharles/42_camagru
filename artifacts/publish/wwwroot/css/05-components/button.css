@@ -1,0 +1,48 @@
+.c-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.45rem;
+    min-height: 2.75rem;
+    padding: 0.75rem 1.15rem;
+    border: 1px solid transparent;
+    border-radius: 999px;
+    cursor: pointer;
+    transition: transform var(--transition-fast), border-color var(--transition-fast), background-color var(--transition-fast);
+}
+
+.c-button:hover {
+    transform: translateY(-1px);
+}
+
+.c-button:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+    transform: none;
+}
+
+.c-button--primary {
+    color: #041214;
+    background: linear-gradient(135deg, var(--color-accent-cyan), var(--color-accent-lime));
+}
+
+.c-button--ghost {
+    border-color: var(--color-border-strong);
+    background: rgba(74, 236, 229, 0.06);
+    color: var(--color-text);
+}
+
+.c-button--danger {
+    border-color: rgba(255, 109, 109, 0.42);
+    background: rgba(255, 109, 109, 0.12);
+    color: #ffdcdc;
+}
+
+.c-button--icon {
+    min-height: 2.3rem;
+    padding-inline: 0.8rem;
+}
+
+.c-button--block {
+    width: 100%;
+}
