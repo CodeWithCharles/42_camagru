@@ -1,0 +1,43 @@
+@{
+    string CurrentPath() => Context.Request.Path.Value?.ToLowerInvariant() ?? string.Empty;
+    bool IsActive(string startsWith) => CurrentPath().StartsWith(startsWith, StringComparison.OrdinalIgnoreCase);
+}
+
+<header class="c-site-nav">
+    <div class="o-container c-site-nav__inner">
+        <a class="c-site-nav__brand" asp-controller="Gallery" asp-action="Index">
+            <span class="c-site-nav__brand-mark" aria-hidden="true"></span>
+            <span class="c-site-nav__brand-copy">
+                <strong>Camagru</strong>
+                <small>Montage Console</small>
+            </span>
+        </a>
+
+        <nav class="c-site-nav__links" aria-label="Primary">
+            <a class="c-site-nav__link @(IsActive("/gallery") ? "is-active" : string.Empty)"
+               asp-controller="Gallery" asp-action="Index">Gallery</a>
+            <a class="c-site-nav__link @(IsActive("/editor") ? "is-active" : string.Empty)"
+               asp-controller="Editor" asp-action="Index">Editor</a>
+            <a class="c-site-nav__link @(IsActive("/profile") ? "is-active" : string.Empty)"
+               asp-controller="Profile" asp-action="Index">Profile</a>
+            <a class="c-site-nav__link @(IsActive("/home/privacy") ? "is-active" : string.Empty)"
+               asp-controller="Home" asp-action="Privacy">Privacy</a>
+        </nav>
+
+        <div class="c-site-nav__actions">
+            @if (User.Identity?.IsAuthenticated ?? false)
+            {
+                <span class="c-site-nav__status">Online as @User.Identity!.Name</span>
+                <form asp-controller="Auth" asp-action="Logout" method="post" class="c-site-nav__logout">
+                    @Html.AntiForgeryToken()
+                    <button type="submit" class="c-button c-button--ghost">Logout</button>
+                </form>
+            }
+            else
+            {
+                <a class="c-button c-button--ghost" asp-controller="Auth" asp-action="Login">Login</a>
+                <a class="c-button c-button--primary" asp-controller="Auth" asp-action="Register">Register</a>
+            }
+        </div>
+    </div>
+</header>

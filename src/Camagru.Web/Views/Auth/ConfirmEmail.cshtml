@@ -1,0 +1,29 @@
+@model ConfirmEmailPageViewModel
+@{
+    ViewData["Title"] = Model.Title;
+    ViewData["PageId"] = "auth";
+}
+
+<section class="p-auth__single">
+    <article class="c-card c-card--auth">
+        <span class="c-eyebrow">Verification Channel</span>
+        <h1>@Model.Headline</h1>
+        <p>@Model.Message</p>
+
+        @if (!Model.IsSuccess && !Model.IsAlreadyConfirmed && !Model.CanResendConfirmation && !string.IsNullOrWhiteSpace(Model.MissingContractName))
+        {
+            <div class="c-inline-alert c-inline-alert--warning">
+                <strong>Resend fallback staged in Web only.</strong>
+                <span>Missing Application-layer contract: <code>@Model.MissingContractName</code>.</span>
+            </div>
+        }
+
+        <div class="c-card__actions">
+            <a class="c-button c-button--primary" href="@Model.PrimaryActionUrl">@Model.PrimaryActionText</a>
+            @if (!string.IsNullOrWhiteSpace(Model.SecondaryActionText) && !string.IsNullOrWhiteSpace(Model.SecondaryActionUrl))
+            {
+                <a class="c-button c-button--ghost" href="@Model.SecondaryActionUrl">@Model.SecondaryActionText</a>
+            }
+        </div>
+    </article>
+</section>

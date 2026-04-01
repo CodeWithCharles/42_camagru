@@ -1,6 +1,15 @@
-﻿@{
-    ViewData["Title"] = "Privacy Policy";
+@{
+    ViewData["Title"] = "Privacy";
+    ViewData["PageId"] = "status";
 }
-<h1>@ViewData["Title"]</h1>
 
-<p>Use this page to detail your site's privacy policy.</p>
+<section class="o-container p-status">
+    <article class="c-card c-card--hero">
+        <span class="c-eyebrow">Privacy</span>
+        <h1>Privacy and security notes</h1>
+        <p>Camagru uses cookie authentication, server-side validation for form posts, and placeholder UI where a backend contract is intentionally not wired yet. Sensitive credentials remain local through environment variables as required by the project subject.</p>
+        <div class="c-card__actions">
+            <a class="c-button c-button--primary" asp-controller="Gallery" asp-action="Index">Back to gallery</a>
+        </div>
+    </article>
+</section>

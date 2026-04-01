@@ -1,0 +1,30 @@
+@model CarouselViewModel
+
+<div class="c-carousel" data-carousel aria-label="@Model.AccessibleLabel">
+    <div class="c-carousel__viewport">
+        @for (var index = 0; index < Model.ImageUrls.Count; index++)
+        {
+            <figure class="c-carousel__slide @(index == 0 ? "is-active" : string.Empty)" data-carousel-slide>
+                <img src="@Model.ImageUrls[index]" alt="@($"{Model.AltPrefix} {index + 1}")" />
+            </figure>
+        }
+    </div>
+
+    @if (Model.ImageUrls.Count > 1)
+    {
+        <div class="c-carousel__controls">
+            <button type="button" class="c-button c-button--icon" data-carousel-prev aria-label="Previous image">‹</button>
+            <div class="c-carousel__dots">
+                @for (var index = 0; index < Model.ImageUrls.Count; index++)
+                {
+                    <button type="button"
+                            class="c-carousel__dot @(index == 0 ? "is-active" : string.Empty)"
+                            data-carousel-dot
+                            data-carousel-index="@index"
+                            aria-label="Go to image @(index + 1)"></button>
+                }
+            </div>
+            <button type="button" class="c-button c-button--icon" data-carousel-next aria-label="Next image">›</button>
+        </div>
+    }
+</div>

@@ -1,0 +1,59 @@
+@model GalleryIndexViewModel
+@{
+    ViewData["Title"] = "Gallery";
+    ViewData["PageId"] = "gallery";
+}
+
+<section class="p-gallery">
+    <header class="p-gallery__hero o-container">
+        <div class="c-card c-card--hero">
+            <span class="c-eyebrow">Public Feed</span>
+            <h1>Camagru gallery uplink</h1>
+            <p>Browse montage posts from every creator, inspect them in-place with deep-linkable modals, and stage interactions through placeholder flows.</p>
+            <div class="p-gallery__hero-actions">
+                <a class="c-button c-button--primary" asp-controller="Editor" asp-action="Index">Open editor</a>
+                @if (Model.IsAuthenticated)
+                {
+                    <a class="c-button c-button--ghost" asp-controller="Profile" asp-action="Index">Profile controls</a>
+                }
+                else
+                {
+                    <a class="c-button c-button--ghost" href="@Model.LoginUrl">Login to interact</a>
+                }
+            </div>
+        </div>
+        <div class="p-gallery__hero-stats c-card c-card--hud">
+            <span class="c-eyebrow">Telemetry</span>
+            <div class="p-gallery__stat-grid">
+                <div>
+                    <strong>@Model.TotalItems</strong>
+                    <span>public posts</span>
+                </div>
+                <div>
+                    <strong>@Model.CurrentPage</strong>
+                    <span>active page</span>
+                </div>
+                <div>
+                    <strong>@(Model.IsAuthenticated ? "LIVE" : "READ")</strong>
+                    <span>@(Model.IsAuthenticated ? "interaction mode" : "guest mode")</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="o-container">
+        <div class="p-gallery__grid">
+            @foreach (var post in Model.Posts)
+            {
+                <partial name="~/Views/Gallery/Partials/_PostCard.cshtml" model="post" />
+            }
+        </div>
+
+        <partial name="~/Views/Gallery/Partials/_Pagination.cshtml" model="Model.Pagination" />
+    </div>
+</section>
+
+@if (Model.ActivePost != null)
+{
+    <partial name="~/Views/Gallery/Partials/_PostModal.cshtml" model="Model.ActivePost" />
+}

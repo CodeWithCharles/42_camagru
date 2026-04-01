@@ -1,0 +1,22 @@
+@model GalleryPostCardViewModel
+
+<article class="c-card c-card--post">
+    <a class="c-post-card__cover" href="@Model.OpenUrl" aria-label="Open post by @Model.AuthorName">
+        <img src="@Model.CoverImageUrl" alt="Camagru post by @Model.AuthorName" loading="lazy" />
+        <span class="c-post-card__badge">@Model.ImageCount shot@(Model.ImageCount == 1 ? string.Empty : "s")</span>
+    </a>
+    <div class="c-post-card__body">
+        <div class="c-post-card__meta">
+            <div>
+                <strong>@Model.AuthorName</strong>
+                <span>@Model.AuthorHandle</span>
+            </div>
+            <small>@Model.CreatedLabel</small>
+        </div>
+        <p>@Model.Description</p>
+        <div class="c-post-card__stats">
+            <span>@Model.LikeCount likes</span>
+            <span>@Model.CommentCount comments</span>
+        </div>
+    </div>
+</article>

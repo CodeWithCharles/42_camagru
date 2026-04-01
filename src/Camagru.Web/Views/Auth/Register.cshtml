@@ -1,45 +1,24 @@
-@model Camagru.Application.Contracts.Auth.RegisterRequest
-
+@model RegisterPageViewModel
 @{
     ViewData["Title"] = "Register";
+    ViewData["PageId"] = "auth";
 }
 
-<h1>Register</h1>
-
-<form asp-action="Register" method="post">
-    @Html.AntiForgeryToken()
-    
-    <div asp-validation-summary="All"></div>
-    
-    <div>
-        <label asp-for="Username"></label>
-        <input asp-for="Username" />
-        <span asp-validation-for="Username"></span>
-    </div>
-    
-    <div>
-        <label asp-for="Email"></label>
-        <input asp-for="Email" type="email" />
-        <span asp-validation-for="Email"></span>
-    </div>
-    
-    <div>
-        <label asp-for="Password"></label>
-        <input asp-for="Password" type="password" />
-        <span asp-validation-for="Password"></span>
-    </div>
-    
-    <div>
-        <label asp-for="ConfirmPassword"></label>
-        <input asp-for="ConfirmPassword" type="password" />
-        <span asp-validation-for="ConfirmPassword"></span>
-    </div>
-    
-    <div>
-        <button type="submit">Register</button>
-    </div>
-</form>
-
-<div>
-    <a asp-action="Login">Already have an account? Login</a>
-</div>
+<partial name="~/Views/Shared/Forms/_AuthCard.cshtml" model="new AuthCardViewModel
+{
+    Eyebrow = \"Access Node\",
+    Title = \"Launch a Camagru account\",
+    Intro = \"Create your profile, verify the email link, and unlock the editor when you are ready to stage montages.\",
+    FormPartialPath = \"~/Views/Auth/Partials/_RegisterForm.cshtml\",
+    FormModel = Model,
+    SecondaryHint = \"Already connected to the network?\",
+    SecondaryLinkText = \"Sign in\",
+    SecondaryLinkUrl = Url.Action(\"Login\", \"Auth\") ?? \"/Auth/Login\",
+    AsideTitle = \"Account requirements\",
+    AsidePoints = new[]
+    {
+        \"Username, valid email, and a strong password are all required.\",
+        \"A confirmation link is sent immediately after registration.\",
+        \"Guests can browse the gallery, but posting and editing stay locked until sign-in.\"
+    }
+}" />

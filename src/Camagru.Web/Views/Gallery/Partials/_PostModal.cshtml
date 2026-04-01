@@ -1,0 +1,124 @@
+@model GalleryPostModalViewModel
+@{
+    var returnUrl = $"{Context.Request.Path}{Context.Request.QueryString}";
+}
+
+<div class="c-modal is-open"
+     data-modal-root
+     data-close-url="@Model.CloseUrl"
+     aria-hidden="false"
+     role="dialog"
+     aria-modal="true"
+     aria-labelledby="gallery-modal-title">
+    <div class="c-modal__backdrop" data-modal-close></div>
+    <div class="c-modal__panel c-modal__panel--post">
+        <button type="button" class="c-modal__close" data-modal-close aria-label="Close post details">×</button>
+
+        <div class="c-post-modal">
+            <div class="c-post-modal__media">
+                <partial name="~/Views/Gallery/Partials/_Carousel.cshtml" model="new CarouselViewModel
+                {
+                    Id = $\"gallery-carousel-{Model.Id}\",
+                    AccessibleLabel = $\"Post {Model.Id} images\",
+                    ImageUrls = Model.ImageUrls,
+                    AltPrefix = $\"Post {Model.Id} image\"
+                }" />
+            </div>
+
+            <div class="c-post-modal__meta">
+                <section class="c-post-modal__summary">
+                    <span class="c-eyebrow">Gallery Modal</span>
+                    <h2 id="gallery-modal-title">@Model.AuthorName</h2>
+                    <p class="c-post-modal__handle">@Model.AuthorHandle · @Model.CreatedLabel</p>
+                    <p class="c-post-modal__description">@Model.Description</p>
+                    <div class="c-post-modal__stats">
+                        <span>@Model.LikeCount likes</span>
+                        <span>@Model.CommentCount comments</span>
+                    </div>
+                    <div class="c-post-modal__actions">
+                        <button type="button"
+                                class="c-button c-button--ghost"
+                                data-share-button
+                                data-share-url="@Model.ShareUrl"
+                                data-share-title="Camagru post by @Model.AuthorName">Share</button>
+                        @if (Model.IsOwnedByCurrentUser)
+                        {
+                            <form asp-controller="Gallery" asp-action="Delete" method="post">
+                                @Html.AntiForgeryToken()
+                                <input type="hidden" name="PostId" value="@Model.Id" />
+                                <input type="hidden" name="ReturnUrl" value="@returnUrl" />
+                                <button type="submit" class="c-button c-button--danger">Delete my post</button>
+                            </form>
+                        }
+                    </div>
+                </section>
+
+                <section class="c-post-modal__comments">
+                    <div class="c-post-modal__comment-header">
+                        <h3>Comments</h3>
+                        @if (!Model.IsAuthenticated)
+                        {
+                            <a class="c-button c-button--ghost" href="@Model.LoginUrl">Log in to interact</a>
+                        }
+                    </div>
+
+                    <div class="c-post-modal__comment-list">
+                        @if (Model.Comments.Count > 0)
+                        {
+                            @foreach (var comment in Model.Comments)
+                            {
+                                <article class="c-comment">
+                                    <div class="c-comment__meta">
+                                        <strong>@comment.AuthorName</strong>
+                                        <span>@comment.AuthorHandle</span>
+                                        <small>@comment.CreatedLabel</small>
+                                    </div>
+                                    <p>@comment.Content</p>
+                                </article>
+                            }
+                        }
+                        else
+                        {
+                            <div class="c-empty-state c-empty-state--compact">
+                                <strong>No comments yet</strong>
+                                <p>This post is public, but the thread is still quiet.</p>
+                            </div>
+                        }
+                    </div>
+
+                    @if (Model.IsAuthenticated)
+                    {
+                        <div class="c-post-modal__interaction-row">
+                            <form asp-controller="Gallery" asp-action="Like" method="post" class="c-inline-form">
+                                @Html.AntiForgeryToken()
+                                <input type="hidden" name="PostId" value="@Model.Id" />
+                                <input type="hidden" name="ReturnUrl" value="@returnUrl" />
+                                <button type="submit" class="c-button c-button--primary">Like</button>
+                            </form>
+
+                            <form asp-controller="Gallery" asp-action="Comment" method="post" class="c-inline-form c-inline-form--comment">
+                                @Html.AntiForgeryToken()
+                                <input type="hidden" name="PostId" value="@Model.Id" />
+                                <input type="hidden" name="ReturnUrl" value="@returnUrl" />
+                                <label class="sr-only" for="comment-@Model.Id">Comment</label>
+                                <textarea id="comment-@Model.Id"
+                                          class="c-input c-input--multiline"
+                                          name="Comment"
+                                          rows="3"
+                                          placeholder="Placeholder submission only for now."></textarea>
+                                <button type="submit" class="c-button c-button--ghost">Post comment</button>
+                            </form>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="c-inline-alert">
+                            <strong>Read-only mode.</strong>
+                            <span>Guests can browse images and comments, but likes and comments are reserved for signed-in users.</span>
+                        </div>
+                    }
+                </section>
+            </div>
+        </div>
+    </div>
+</div>

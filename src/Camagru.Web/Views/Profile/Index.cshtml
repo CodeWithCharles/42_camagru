@@ -1,265 +1,217 @@
-@using Camagru.Application.UseCases.Auth
-@model UserProfileData
-
+@model ProfilePageViewModel
 @{
-    ViewData["Title"] = $"{Model.Username}'s Profile";
-    bool isOwnProfile = (bool?)ViewData["IsOwnProfile"] ?? false;
+    ViewData["Title"] = "Profile";
+    ViewData["PageId"] = "profile";
+    ViewData["ActiveSection"] = Model.ActiveSection;
 }
 
-<div class="profile-container">
-    <div class="profile-header">
-        <div class="profile-avatar">
-            @if (Model.AvatarImageId.HasValue)
+<section class="o-container p-profile">
+    <header class="p-profile__hero">
+        <article class="c-card c-card--hero">
+            <span class="c-eyebrow">Account Deck</span>
+            <h1>@Model.Summary.DisplayName</h1>
+            <p class="p-profile__handle">@("@" + Model.Summary.Username)</p>
+            @if (!string.IsNullOrWhiteSpace(Model.Summary.Bio))
             {
-                <img src="/uploads/avatar/@Model.AvatarImageId" alt="@Model.Username" class="avatar-image">
+                <p>@Model.Summary.Bio</p>
             }
             else
             {
-                <div class="avatar-placeholder">
-                    <span>@Model.Username.First().ToString().ToUpper()</span>
+                <p>No bio configured yet. Update the identity panel below to personalize this account.</p>
+            }
+            <div class="p-profile__stats">
+                <div>
+                    <strong>@Model.Summary.PostCount</strong>
+                    <span>posts</span>
                 </div>
-            }
-        </div>
-
-        <div class="profile-info">
-            <h1>@(Model.DisplayName ?? @Model.Username)</h1>
-            @if (Model.DisplayName != null && Model.DisplayName != String.Empty)
-            {
-                <h5>@("@" + Model.Username)</h5>
-            }
-            @if (!string.IsNullOrWhiteSpace(Model.Bio))
-            {
-                <p class="bio">@Model.Bio</p>
-            }
-            <div class="profile-stats">
-                <div class="stat">
-                    <span class="stat-label">@Model.PostCount Post@(Model.PostCount > 1 ? "s" : "")</span>
+                <div>
+                    <strong>@Model.Summary.CreatedAt.ToString("MMMM yyyy")</strong>
+                    <span>member since</span>
+                </div>
+                <div>
+                    <strong>@(Model.Summary.EmailNotificationsEnabled ? "ON" : "OFF")</strong>
+                    <span>comment emails</span>
                 </div>
             </div>
-            <p class="member-since">Member since @Model.CreatedAt.ToString("MMMM yyyy")</p>
+        </article>
 
-            @if (isOwnProfile)
+        <article class="c-card c-card--hud">
+            <span class="c-eyebrow">Identity Snapshot</span>
+            <h2>Current account values</h2>
+            <partial name="~/Views/Shared/Forms/_FormField.cshtml" model="new FormFieldViewModel
             {
-                <div class="profile-actions">
-                    <a href="@Url.Action("Edit", "Profile")" class="btn btn-primary">Edit Profile</a>
-                    <a href="@Url.Action("Settings", "Profile")" class="btn btn-secondary">Settings</a>
-                    <a href="@Url.Action("Create", "Posts")" class="btn btn-accent">Create New Post</a>
-                </div>
-            }
-        </div>
-    </div>
+                Label = \"Email\",
+                Name = \"summary-email\",
+                Value = Model.Summary.Email,
+                ReadOnly = true
+            }" />
+            <partial name="~/Views/Shared/Forms/_FormField.cshtml" model="new FormFieldViewModel
+            {
+                Label = \"Display name\",
+                Name = \"summary-display-name\",
+                Value = Model.Summary.DisplayName,
+                ReadOnly = true
+            }" />
+        </article>
+    </header>
 
-    <div class="profile-posts">
-        <h2>Posts</h2>
-        @if (Model.Posts.Any())
-        {
-            <div class="posts-grid">
-                @foreach (var post in Model.Posts)
-                {
-                    <div class="post-card">
-                        @if (post.Images.Any())
-                        {
-                            <img src="@post.Images.First().FilePath" 
-                                 alt="Post @post.Id" 
-                                 class="post-image">
-                        }
-                        <div class="post-overlay">
-                            <p>@post.Description</p>
-                        </div>
+    <div class="p-profile__layout">
+        <section id="identity" class="c-card p-profile__panel" data-profile-section="identity">
+            <div class="p-profile__panel-header">
+                <span class="c-eyebrow">Identity</span>
+                <h2>Update username and bio</h2>
+            </div>
+
+            <form asp-action="UpdateDetails" method="post" class="c-form c-form--stack">
+                @Html.AntiForgeryToken()
+                <partial name="~/Views/Shared/Forms/_ValidationSummary.cshtml" />
+                <input asp-for="Details.CurrentEmail" type="hidden" />
+
+                <div class="c-field">
+                    <label asp-for="Details.Username" class="c-field__label"></label>
+                    <input asp-for="Details.Username" class="c-input" />
+                    <span asp-validation-for="Details.Username" class="c-field__error"></span>
+                </div>
+
+                <div class="c-field">
+                    <label asp-for="Details.DisplayName" class="c-field__label"></label>
+                    <input asp-for="Details.DisplayName" class="c-input" />
+                    <span asp-validation-for="Details.DisplayName" class="c-field__error"></span>
+                </div>
+
+                <div class="c-field">
+                    <label asp-for="Details.Bio" class="c-field__label"></label>
+                    <textarea asp-for="Details.Bio" class="c-input c-input--multiline" rows="5"></textarea>
+                    <span asp-validation-for="Details.Bio" class="c-field__error"></span>
+                </div>
+
+                <button type="submit" class="c-button c-button--primary">Save identity</button>
+            </form>
+        </section>
+
+        <section id="security" class="c-card p-profile__panel" data-profile-section="security">
+            <div class="p-profile__panel-header">
+                <span class="c-eyebrow">Security</span>
+                <h2>Change email and password</h2>
+            </div>
+
+            <div class="p-profile__double-stack">
+                <form asp-action="ChangeEmail" method="post" class="c-form c-form--stack">
+                    @Html.AntiForgeryToken()
+                    <h3>Change email</h3>
+                    <partial name="~/Views/Shared/Forms/_ValidationSummary.cshtml" />
+
+                    <div class="c-field">
+                        <label asp-for="EmailChange.CurrentPassword" class="c-field__label"></label>
+                        <input asp-for="EmailChange.CurrentPassword" class="c-input" autocomplete="current-password" />
+                        <span asp-validation-for="EmailChange.CurrentPassword" class="c-field__error"></span>
                     </div>
-                }
+
+                    <div class="c-field">
+                        <label asp-for="EmailChange.NewEmail" class="c-field__label"></label>
+                        <input asp-for="EmailChange.NewEmail" class="c-input" autocomplete="email" />
+                        <span asp-validation-for="EmailChange.NewEmail" class="c-field__error"></span>
+                    </div>
+
+                    <button type="submit" class="c-button c-button--ghost">Update email</button>
+                </form>
+
+                <form asp-action="ChangePassword" method="post" class="c-form c-form--stack">
+                    @Html.AntiForgeryToken()
+                    <h3>Change password</h3>
+                    <partial name="~/Views/Shared/Forms/_ValidationSummary.cshtml" />
+
+                    <div class="c-field">
+                        <label asp-for="PasswordChange.CurrentPassword" class="c-field__label"></label>
+                        <input asp-for="PasswordChange.CurrentPassword" class="c-input" autocomplete="current-password" />
+                        <span asp-validation-for="PasswordChange.CurrentPassword" class="c-field__error"></span>
+                    </div>
+
+                    <div class="c-field">
+                        <label asp-for="PasswordChange.NewPassword" class="c-field__label"></label>
+                        <input asp-for="PasswordChange.NewPassword" class="c-input" autocomplete="new-password" />
+                        <span asp-validation-for="PasswordChange.NewPassword" class="c-field__error"></span>
+                    </div>
+
+                    <div class="c-field">
+                        <label asp-for="PasswordChange.ConfirmNewPassword" class="c-field__label"></label>
+                        <input asp-for="PasswordChange.ConfirmNewPassword" class="c-input" autocomplete="new-password" />
+                        <span asp-validation-for="PasswordChange.ConfirmNewPassword" class="c-field__error"></span>
+                    </div>
+
+                    <button type="submit" class="c-button c-button--ghost">Update password</button>
+                </form>
             </div>
-        }
-        else
-        {
-            <p class="empty-state">No posts yet.</p>
-        }
+        </section>
+
+        <section id="preferences" class="c-card p-profile__panel" data-profile-section="preferences">
+            <div class="p-profile__panel-header">
+                <span class="c-eyebrow">Preferences</span>
+                <h2>Notification routing</h2>
+            </div>
+
+            <form asp-action="UpdatePreferences" method="post" class="c-form c-form--stack">
+                @Html.AntiForgeryToken()
+                <label class="c-toggle">
+                    <input asp-for="Preferences.EmailNotificationsEnabled" />
+                    <span class="c-toggle__track"></span>
+                    <span class="c-toggle__copy">Email me when a new comment lands on one of my posts.</span>
+                </label>
+                <button type="submit" class="c-button c-button--primary">Save preferences</button>
+            </form>
+        </section>
+
+        <section class="c-card p-profile__panel">
+            <div class="p-profile__panel-header">
+                <span class="c-eyebrow">Recent Posts</span>
+                <h2>Your latest public captures</h2>
+            </div>
+
+            @if (Model.RecentPosts.Count > 0)
+            {
+                <div class="p-profile__post-grid">
+                    @foreach (var post in Model.RecentPosts)
+                    {
+                        <a class="c-card c-card--thumb p-profile__post-link"
+                           asp-controller="Gallery"
+                           asp-action="Index"
+                           asp-route-postId="@post.PostId">
+                            <img src="@post.ImageUrl" alt="Post @post.PostId" />
+                            <div>
+                                <strong>@post.CreatedLabel</strong>
+                                <p>@post.Description</p>
+                            </div>
+                        </a>
+                    }
+                </div>
+            }
+            else
+            {
+                <div class="c-empty-state">
+                    <strong>No posts published yet</strong>
+                    <p>The editor is ready for preview exports, and the public gallery will light up once persistence is wired.</p>
+                </div>
+            }
+        </section>
+
+        <section id="danger" class="c-card c-card--danger p-profile__panel" data-profile-section="danger">
+            <div class="p-profile__panel-header">
+                <span class="c-eyebrow">Danger Zone</span>
+                <h2>Delete account</h2>
+            </div>
+
+            <form asp-action="DeleteAccount" method="post" class="c-form c-form--stack">
+                @Html.AntiForgeryToken()
+                <p>This action removes your account and associated content. The UI enforces ownership, and the use case performs the deletion.</p>
+
+                <div class="c-field">
+                    <label asp-for="DeleteAccount.Password" class="c-field__label"></label>
+                    <input asp-for="DeleteAccount.Password" class="c-input" autocomplete="current-password" />
+                    <span asp-validation-for="DeleteAccount.Password" class="c-field__error"></span>
+                </div>
+
+                <button type="submit" class="c-button c-button--danger">Delete account</button>
+            </form>
+        </section>
     </div>
-</div>
-
-<style>
-    .profile-container {
-        max-width: 1200px;
-        margin: 2rem auto;
-        padding: 0 1rem;
-    }
-
-    .profile-header {
-        display: flex;
-        gap: 2rem;
-        margin-bottom: 3rem;
-        padding: 2rem;
-        background: #f5f5f5;
-        border-radius: 8px;
-    }
-
-    .profile-avatar {
-        flex-shrink: 0;
-    }
-
-    .avatar-image,
-    .avatar-placeholder {
-        width: 150px;
-        height: 150px;
-        border-radius: 50%;
-        object-fit: cover;
-        background: #ddd;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 3rem;
-        font-weight: bold;
-        color: #666;
-    }
-
-    .profile-info h1 {
-        margin: 0 0 0.5rem 0;
-        font-size: 2rem;
-    }
-
-    .bio {
-        color: #666;
-        font-size: 1rem;
-        margin: 0.5rem 0 1.5rem 0;
-        max-width: 400px;
-    }
-
-    .profile-stats {
-        display: flex;
-        gap: 2rem;
-        margin: 1rem 0;
-    }
-
-    .stat {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-    }
-
-    .stat-count {
-        font-size: 1.5rem;
-        font-weight: bold;
-        color: #333;
-    }
-
-    .stat-label {
-        font-size: 0.875rem;
-        color: #666;
-    }
-
-    .member-since {
-        font-size: 0.875rem;
-        color: #999;
-        margin: 1rem 0 1.5rem 0;
-    }
-
-    .profile-actions {
-        display: flex;
-        gap: 0.5rem;
-        flex-wrap: wrap;
-    }
-
-    .btn {
-        padding: 0.5rem 1rem;
-        border: none;
-        border-radius: 4px;
-        cursor: pointer;
-        text-decoration: none;
-        display: inline-block;
-        font-weight: 500;
-        transition: background-color 0.2s;
-    }
-
-    .btn-primary {
-        background: #0066cc;
-        color: white;
-    }
-
-    .btn-primary:hover {
-        background: #0052a3;
-    }
-
-    .btn-secondary {
-        background: #666;
-        color: white;
-    }
-
-    .btn-secondary:hover {
-        background: #555;
-    }
-
-    .btn-accent {
-        background: #4CAF50;
-        color: white;
-    }
-
-    .btn-accent:hover {
-        background: #45a049;
-    }
-
-    .profile-posts h2 {
-        margin-top: 2rem;
-        margin-bottom: 1rem;
-        font-size: 1.5rem;
-    }
-
-    .posts-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-        gap: 1rem;
-    }
-
-    .post-card {
-        position: relative;
-        aspect-ratio: 1;
-        overflow: hidden;
-        border-radius: 4px;
-        background: #f0f0f0;
-        cursor: pointer;
-    }
-
-    .post-image {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-        transition: transform 0.2s;
-    }
-
-    .post-card:hover .post-image {
-        transform: scale(1.05);
-    }
-
-    .post-overlay {
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        background: rgba(0, 0, 0, 0.7);
-        color: white;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        padding: 1rem;
-        text-align: center;
-        opacity: 0;
-        transition: opacity 0.2s;
-    }
-
-    .post-card:hover .post-overlay {
-        opacity: 1;
-    }
-
-    .post-overlay p {
-        margin: 0;
-        font-size: 0.875rem;
-        word-break: break-word;
-    }
-
-    .empty-state {
-        text-align: center;
-        color: #999;
-        padding: 2rem;
-        font-style: italic;
-    }
-</style>
+</section>

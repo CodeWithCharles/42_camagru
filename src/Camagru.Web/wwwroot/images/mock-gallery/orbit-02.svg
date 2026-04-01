@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1080 1080">
+  <rect width="1080" height="1080" fill="#081318"/>
+  <path d="M0 820C162 718 323 667 483 667s320 51 597 153v260H0Z" fill="#0d2730"/>
+  <circle cx="820" cy="220" r="110" fill="#ff6d6d" fill-opacity=".2"/>
+  <circle cx="820" cy="220" r="44" fill="#ff6d6d"/>
+  <rect x="120" y="160" width="360" height="230" rx="28" fill="#0d2229" stroke="#4aece5" stroke-opacity=".3"/>
+  <text x="150" y="250" fill="#4aece5" font-size="38" font-family="Arial, sans-serif">Orbit Session 02</text>
+  <text x="150" y="320" fill="#f2fffd" font-size="64" font-family="Arial, sans-serif">Neon Market</text>
+  <text x="150" y="610" fill="#90f4a7" font-size="44" font-family="Arial, sans-serif">Placeholder montage scene</text>
+</svg>

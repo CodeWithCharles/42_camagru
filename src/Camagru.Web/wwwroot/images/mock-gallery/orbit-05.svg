@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1080 1080">
+  <rect width="1080" height="1080" fill="#071014"/>
+  <rect x="180" y="180" width="720" height="720" rx="360" fill="none" stroke="#4aece5" stroke-width="10" stroke-opacity=".32"/>
+  <rect x="340" y="340" width="400" height="400" rx="200" fill="#0c2228" stroke="#90f4a7" stroke-width="8" stroke-opacity=".48"/>
+  <text x="300" y="520" fill="#4aece5" font-size="44" font-family="Arial, sans-serif">Orbit Session 05</text>
+  <text x="300" y="600" fill="#f4fffd" font-size="78" font-family="Arial, sans-serif">Portrait Lock</text>
+</svg>

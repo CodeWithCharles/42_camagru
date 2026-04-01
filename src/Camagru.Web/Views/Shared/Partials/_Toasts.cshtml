@@ -1,0 +1,49 @@
+@{
+    var toasts = new List<ToastMessageViewModel>();
+
+    if (TempData["Toast.Success"] is string success && !string.IsNullOrWhiteSpace(success))
+    {
+        toasts.Add(new ToastMessageViewModel
+        {
+            Kind = "success",
+            Title = "Signal received",
+            Message = success
+        });
+    }
+
+    if (TempData["Toast.Info"] is string info && !string.IsNullOrWhiteSpace(info))
+    {
+        toasts.Add(new ToastMessageViewModel
+        {
+            Kind = "info",
+            Title = "Heads up",
+            Message = info
+        });
+    }
+
+    if (TempData["Toast.Error"] is string error && !string.IsNullOrWhiteSpace(error))
+    {
+        toasts.Add(new ToastMessageViewModel
+        {
+            Kind = "error",
+            Title = "Attention required",
+            Message = error
+        });
+    }
+}
+
+@if (toasts.Count > 0)
+{
+    <section class="c-toast-stack" aria-live="polite" aria-atomic="true" data-toast-stack>
+        @foreach (var toast in toasts)
+        {
+            <article class="c-toast c-toast--@toast.Kind" data-toast>
+                <div>
+                    <strong>@toast.Title</strong>
+                    <p>@toast.Message</p>
+                </div>
+                <button type="button" class="c-toast__dismiss" data-toast-dismiss aria-label="Dismiss notification">×</button>
+            </article>
+        }
+    </section>
+}

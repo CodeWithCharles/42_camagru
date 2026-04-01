@@ -1,0 +1,27 @@
+@model IReadOnlyList<EditorThumbnailViewModel>
+
+<section class="c-card c-card--hud p-editor__history-panel">
+    <div class="p-editor__panel-header">
+        <span class="c-eyebrow">Capture Tray</span>
+        <h2>Previous captures</h2>
+        <p>These thumbnails live in browser storage only until a future publish use case is wired.</p>
+    </div>
+
+    <div class="c-empty-state c-empty-state--compact" data-thumb-empty-state>
+        <strong>No captures yet</strong>
+        <p>Use the stage controls to export a preview and populate this tray.</p>
+    </div>
+
+    <div class="p-editor__thumb-list" data-thumb-list>
+        @foreach (var item in Model)
+        {
+            <article class="c-card c-card--thumb" data-thumb-item data-thumb-id="@item.Id">
+                <img src="@item.PreviewUrl" alt="@item.Title" />
+                <div>
+                    <strong>@item.Title</strong>
+                    <span>@item.CapturedAtLabel</span>
+                </div>
+            </article>
+        }
+    </div>
+</section>

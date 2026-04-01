@@ -1,0 +1,18 @@
+.p-auth__grid {
+    width: min(100% - 2rem, 66rem);
+    margin-inline: auto;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(16rem, 20rem);
+    gap: var(--space-4);
+}
+
+.p-auth__single {
+    width: min(100% - 2rem, 34rem);
+    margin-inline: auto;
+}
+
+@media (max-width: 56rem) {
+    .p-auth__grid {
+        grid-template-columns: 1fr;
+    }
+}

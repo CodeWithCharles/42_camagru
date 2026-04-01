@@ -1,0 +1,35 @@
+.c-toast-stack {
+    position: fixed;
+    top: 5.5rem;
+    right: 1rem;
+    z-index: 90;
+    display: grid;
+    gap: var(--space-2);
+    width: min(22rem, calc(100% - 2rem));
+}
+
+.c-toast {
+    display: flex;
+    justify-content: space-between;
+    gap: var(--space-2);
+    padding: var(--space-3);
+    border-radius: var(--radius-md);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    background: rgba(8, 19, 24, 0.96);
+    box-shadow: var(--shadow-soft);
+}
+
+.c-toast--success {
+    border-color: rgba(144, 244, 167, 0.35);
+}
+
+.c-toast--error {
+    border-color: rgba(255, 109, 109, 0.35);
+}
+
+.c-toast__dismiss {
+    border: 0;
+    background: transparent;
+    color: var(--color-text);
+    font-size: 1.2rem;
+}

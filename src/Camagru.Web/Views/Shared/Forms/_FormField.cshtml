@@ -1,0 +1,44 @@
+@model FormFieldViewModel
+@{
+    var fullName = string.IsNullOrWhiteSpace(Model.Prefix) ? Model.Name : $"{Model.Prefix}.{Model.Name}";
+    var fullId = fullName.Replace('.', '_');
+    ViewData.ModelState.TryGetValue(fullName, out var fieldState);
+    var errorMessage = fieldState?.Errors.FirstOrDefault()?.ErrorMessage;
+    var currentValue = fieldState?.AttemptedValue ?? Model.Value;
+}
+
+<div class="c-field @(string.IsNullOrWhiteSpace(errorMessage) ? string.Empty : "c-field--invalid")">
+    <label class="c-field__label" for="@fullId">@Model.Label</label>
+
+    @if (Model.IsMultiline)
+    {
+        <textarea class="c-input c-input--multiline"
+                  id="@fullId"
+                  name="@fullName"
+                  rows="@Model.Rows"
+                  placeholder="@Model.Placeholder"
+                  @(Model.Disabled ? "disabled" : null)
+                  @(Model.ReadOnly ? "readonly" : null)>@currentValue</textarea>
+    }
+    else
+    {
+        <input class="c-input"
+               id="@fullId"
+               name="@fullName"
+               type="@Model.Type"
+               value="@currentValue"
+               placeholder="@Model.Placeholder"
+               @(Model.Disabled ? "disabled" : null)
+               @(Model.ReadOnly ? "readonly" : null) />
+    }
+
+    @if (!string.IsNullOrWhiteSpace(Model.Hint))
+    {
+        <p class="c-field__hint">@Model.Hint</p>
+    }
+
+    @if (!string.IsNullOrWhiteSpace(errorMessage))
+    {
+        <span class="c-field__error">@errorMessage</span>
+    }
+</div>

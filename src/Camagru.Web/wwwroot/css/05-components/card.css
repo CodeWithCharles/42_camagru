@@ -1,0 +1,148 @@
+.c-card {
+    display: grid;
+    gap: var(--space-3);
+    padding: var(--space-4);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    background:
+        linear-gradient(180deg, rgba(12, 29, 36, 0.88), rgba(5, 15, 19, 0.92));
+    box-shadow: var(--shadow-soft), var(--shadow-glow);
+}
+
+.c-card--hero {
+    min-height: 15rem;
+    align-content: start;
+}
+
+.c-card--auth {
+    min-height: 100%;
+}
+
+.c-card--hud {
+    background:
+        radial-gradient(circle at top right, rgba(74, 236, 229, 0.12), transparent 36%),
+        linear-gradient(180deg, rgba(9, 25, 32, 0.92), rgba(4, 13, 16, 0.95));
+}
+
+.c-card--editor {
+    gap: var(--space-4);
+}
+
+.c-card--post,
+.c-card--thumb,
+.c-card--sticker {
+    padding: 0;
+    overflow: hidden;
+}
+
+.c-card--thumb div,
+.c-card--post .c-post-card__body {
+    padding: var(--space-3);
+}
+
+.c-card--thumb img,
+.c-card--post img {
+    aspect-ratio: 1;
+    object-fit: cover;
+    width: 100%;
+}
+
+.c-card--danger {
+    border-color: rgba(255, 109, 109, 0.28);
+}
+
+.c-card h1,
+.c-card h2,
+.c-card h3 {
+    font-family: var(--font-display);
+    line-height: 1.15;
+}
+
+.c-auth-card__header,
+.p-editor__panel-header,
+.p-profile__panel-header {
+    display: grid;
+    gap: 0.65rem;
+}
+
+.c-auth-card__footer,
+.c-auth-card__links {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: var(--space-2);
+    color: var(--color-text-muted);
+}
+
+.c-auth-card__aside-list {
+    list-style: none;
+    display: grid;
+    gap: var(--space-2);
+}
+
+.c-auth-card__aside-list li {
+    padding-left: 1rem;
+    position: relative;
+    color: var(--color-text-muted);
+}
+
+.c-auth-card__aside-list li::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0.7rem;
+    width: 0.45rem;
+    height: 0.45rem;
+    border-radius: 50%;
+    background: var(--color-accent-cyan);
+}
+
+.c-post-card__cover {
+    position: relative;
+}
+
+.c-post-card__badge {
+    position: absolute;
+    top: var(--space-2);
+    right: var(--space-2);
+    padding: 0.35rem 0.7rem;
+    border-radius: 999px;
+    background: rgba(3, 12, 15, 0.88);
+    font-size: 0.82rem;
+}
+
+.c-post-card__meta,
+.c-post-card__stats,
+.c-comment__meta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-2);
+}
+
+.c-post-card__meta div,
+.c-comment__meta {
+    display: grid;
+    gap: 0.1rem;
+}
+
+.c-card--sticker {
+    align-items: center;
+    padding: var(--space-2);
+    gap: var(--space-2);
+    cursor: pointer;
+    transition: border-color var(--transition-fast), transform var(--transition-fast);
+}
+
+.c-card--sticker:hover {
+    border-color: var(--color-border-strong);
+    transform: translateY(-2px);
+}
+
+.c-card--sticker img {
+    width: 5rem;
+    height: 5rem;
+    object-fit: contain;
+    justify-self: center;
+}

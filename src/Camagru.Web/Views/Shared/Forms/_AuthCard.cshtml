@@ -1,0 +1,35 @@
+@model AuthCardViewModel
+
+<section class="p-auth__grid">
+    <article class="c-card c-card--auth">
+        <div class="c-auth-card__header">
+            <span class="c-eyebrow">@Model.Eyebrow</span>
+            <h1>@Model.Title</h1>
+            <p>@Model.Intro</p>
+        </div>
+
+        @if (!string.IsNullOrWhiteSpace(Model.FormPartialPath))
+        {
+            @await Html.PartialAsync(Model.FormPartialPath, Model.FormModel)
+        }
+
+        @if (!string.IsNullOrWhiteSpace(Model.SecondaryLinkText))
+        {
+            <div class="c-auth-card__footer">
+                <span>@Model.SecondaryHint</span>
+                <a href="@Model.SecondaryLinkUrl">@Model.SecondaryLinkText</a>
+            </div>
+        }
+    </article>
+
+    <aside class="c-card c-card--hud">
+        <span class="c-eyebrow">Flight Notes</span>
+        <h2>@Model.AsideTitle</h2>
+        <ul class="c-auth-card__aside-list">
+            @foreach (var point in Model.AsidePoints)
+            {
+                <li>@point</li>
+            }
+        </ul>
+    </aside>
+</section>

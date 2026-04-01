@@ -1,0 +1,4 @@
+.o-container {
+    width: min(100% - 2rem, var(--max-width));
+    margin-inline: auto;
+}

@@ -1,6 +1,40 @@
+@model RegisterConfirmationViewModel
 @{
-    ViewData["Title"] = "Registration Confirmation";
+    ViewData["Title"] = "Check Your Email";
+    ViewData["PageId"] = "auth";
 }
 
-<h1>Registration Confirmation</h1>
-<p>Check your email to confirm your account.</p>
+<section class="p-auth__single">
+    <article class="c-card c-card--auth">
+        <span class="c-eyebrow">Verification Pending</span>
+        <h1>Confirm your account</h1>
+        <p>The next step is in your inbox. Use the confirmation link there before attempting to sign in.</p>
+
+        @if (!string.IsNullOrWhiteSpace(Model.Username))
+        {
+            <partial name="~/Views/Shared/Forms/_FormField.cshtml" model="new FormFieldViewModel
+            {
+                Label = \"Username\",
+                Name = \"registered-username\",
+                Value = Model.Username!,
+                ReadOnly = true
+            }" />
+        }
+
+        @if (!string.IsNullOrWhiteSpace(Model.Email))
+        {
+            <partial name="~/Views/Shared/Forms/_FormField.cshtml" model="new FormFieldViewModel
+            {
+                Label = \"Destination email\",
+                Name = \"registered-email\",
+                Value = Model.Email!,
+                ReadOnly = true
+            }" />
+        }
+
+        <div class="c-card__actions">
+            <a class="c-button c-button--primary" asp-action="Login">Go to login</a>
+            <a class="c-button c-button--ghost" asp-controller="Gallery" asp-action="Index">Browse gallery</a>
+        </div>
+    </article>
+</section>

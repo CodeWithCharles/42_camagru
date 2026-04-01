@@ -1,0 +1,25 @@
+@model PaginationViewModel
+
+@if (Model.Links.Count > 1)
+{
+    <nav class="c-pagination" aria-label="@Model.Label">
+        @if (Model.HasPrevious)
+        {
+            <a class="c-pagination__link" href="@Model.PreviousUrl">Previous</a>
+        }
+
+        @foreach (var link in Model.Links)
+        {
+            <a class="c-pagination__link @(link.IsCurrent ? "is-current" : string.Empty)"
+               href="@link.Url"
+               aria-current="@(link.IsCurrent ? "page" : null)">
+                @link.PageNumber
+            </a>
+        }
+
+        @if (Model.HasNext)
+        {
+            <a class="c-pagination__link" href="@Model.NextUrl">Next</a>
+        }
+    </nav>
+}

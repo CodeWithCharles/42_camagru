@@ -1,0 +1,53 @@
+@model EditorStageViewModel
+
+<section class="c-card c-card--editor">
+    <div class="p-editor__workspace-header">
+        <div>
+            <span class="c-eyebrow">Stage</span>
+            <h1>Montage editor</h1>
+            <p>Webcam and upload flows are client-only previews for now. Publish remains intentionally staged as a placeholder.</p>
+        </div>
+        <div class="p-editor__workspace-actions">
+            <button type="button" class="c-button c-button--ghost" data-start-camera>Start webcam</button>
+            <button type="button" class="c-button c-button--ghost" data-stop-camera disabled>Stop webcam</button>
+            <label class="c-button c-button--ghost p-editor__upload-trigger" for="editor-upload">Upload image</label>
+            <input id="editor-upload" type="file" accept="image/png,image/jpeg,image/webp" hidden data-editor-upload />
+        </div>
+    </div>
+
+    <div class="c-editor-stage" data-editor-stage>
+        <div class="c-editor-stage__media" data-stage-media>
+            <video class="c-editor-stage__video" playsinline muted hidden data-stage-video></video>
+            <img class="c-editor-stage__image" alt="Selected source" hidden data-stage-image />
+            <div class="c-editor-stage__empty" data-stage-empty>
+                <strong>@Model.EmptyTitle</strong>
+                <p>@Model.EmptyDescription</p>
+            </div>
+        </div>
+        <div class="c-editor-stage__overlay-surface" data-overlay-surface></div>
+    </div>
+
+    <div class="p-editor__status-row">
+        <div class="c-inline-alert">
+            <strong>Preview export only.</strong>
+            <span>@Model.PreviewNote</span>
+        </div>
+        <button type="button" class="c-button c-button--primary" data-export-capture disabled>Capture preview</button>
+    </div>
+
+    <div class="p-editor__preview-panel">
+        <div class="p-editor__preview-frame">
+            <img alt="Latest preview export" hidden data-export-preview />
+            <div class="c-empty-state c-empty-state--compact" data-preview-empty>
+                <strong>No preview export yet</strong>
+                <p>Select a base image and at least one overlay before capturing.</p>
+            </div>
+        </div>
+        <details class="p-editor__debug">
+            <summary>Composition payload debug</summary>
+            <pre data-export-payload>{
+  "message": "Preview payload appears here after capture."
+}</pre>
+        </details>
+    </div>
+</section>

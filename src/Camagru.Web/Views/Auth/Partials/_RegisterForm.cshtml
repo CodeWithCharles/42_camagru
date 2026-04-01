@@ -1,0 +1,38 @@
+@model RegisterPageViewModel
+
+<form asp-action="Register" method="post" class="c-form c-form--stack">
+    @Html.AntiForgeryToken()
+    <partial name="~/Views/Shared/Forms/_ValidationSummary.cshtml" />
+
+    <div class="c-field">
+        <label asp-for="Form.Username" class="c-field__label"></label>
+        <input asp-for="Form.Username" class="c-input" autocomplete="username" />
+        <span asp-validation-for="Form.Username" class="c-field__error"></span>
+    </div>
+
+    <div class="c-field">
+        <label asp-for="Form.Email" class="c-field__label"></label>
+        <input asp-for="Form.Email" class="c-input" autocomplete="email" />
+        <span asp-validation-for="Form.Email" class="c-field__error"></span>
+    </div>
+
+    <div class="c-field">
+        <label asp-for="Form.Password" class="c-field__label"></label>
+        <div class="c-password-input">
+            <input asp-for="Form.Password" class="c-input" autocomplete="new-password" />
+            <button type="button" class="c-button c-button--icon" data-password-toggle data-target="Form_Password">Show</button>
+        </div>
+        <span asp-validation-for="Form.Password" class="c-field__error"></span>
+    </div>
+
+    <div class="c-field">
+        <label asp-for="Form.ConfirmPassword" class="c-field__label"></label>
+        <div class="c-password-input">
+            <input asp-for="Form.ConfirmPassword" class="c-input" autocomplete="new-password" />
+            <button type="button" class="c-button c-button--icon" data-password-toggle data-target="Form_ConfirmPassword">Show</button>
+        </div>
+        <span asp-validation-for="Form.ConfirmPassword" class="c-field__error"></span>
+    </div>
+
+    <button type="submit" class="c-button c-button--primary c-button--block">Create account</button>
+</form>

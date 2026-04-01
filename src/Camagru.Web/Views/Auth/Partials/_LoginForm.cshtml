@@ -1,0 +1,48 @@
+@model LoginPageViewModel
+
+<form asp-action="Login" method="post" class="c-form c-form--stack">
+    @Html.AntiForgeryToken()
+    <input asp-for="Form.ReturnUrl" type="hidden" />
+    <partial name="~/Views/Shared/Forms/_ValidationSummary.cshtml" />
+
+    <div class="c-field">
+        <label asp-for="Form.Username" class="c-field__label"></label>
+        <input asp-for="Form.Username" class="c-input" autocomplete="username" />
+        <span asp-validation-for="Form.Username" class="c-field__error"></span>
+    </div>
+
+    <div class="c-field">
+        <label asp-for="Form.Password" class="c-field__label"></label>
+        <div class="c-password-input">
+            <input asp-for="Form.Password" class="c-input" autocomplete="current-password" />
+            <button type="button" class="c-button c-button--icon" data-password-toggle data-target="Form_Password">Show</button>
+        </div>
+        <span asp-validation-for="Form.Password" class="c-field__error"></span>
+    </div>
+
+    <label class="c-checkbox">
+        <input asp-for="Form.RememberMe" />
+        <span>Keep this terminal warm</span>
+    </label>
+
+    @if (Model.ShowConfirmationFallback)
+    {
+        <div class="c-inline-alert c-inline-alert--warning">
+            <strong>Email confirmation is still required.</strong>
+            @if (Model.ConfirmationResendAvailable)
+            {
+                <span>You can request another link from this screen.</span>
+            }
+            else
+            {
+                <span>Resend is staged in the UI, but the Application contract is missing: <code>@Model.MissingConfirmationContractName</code>.</span>
+            }
+        </div>
+    }
+
+    <button type="submit" class="c-button c-button--primary c-button--block">Sign in</button>
+</form>
+
+<div class="c-auth-card__links">
+    <a asp-action="ForgotPassword">Forgot password?</a>
+</div>

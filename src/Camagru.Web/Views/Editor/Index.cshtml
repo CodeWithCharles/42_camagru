@@ -1,0 +1,30 @@
+@model EditorPageViewModel
+@{
+    ViewData["Title"] = "Editor";
+    ViewData["PageId"] = "editor";
+}
+
+<section class="p-editor" data-editor-root data-editor-storage="@Model.StorageKey">
+    <header class="o-container p-editor__hero">
+        <div class="c-card c-card--hero">
+            <span class="c-eyebrow">Authenticated Only</span>
+            <h1>Assemble a neon montage draft</h1>
+            <p>The editor accepts webcam or upload input, supports multi-overlay arrangement, and exports a local preview plus transform payload. Final server rendering remains a future wiring step.</p>
+        </div>
+    </header>
+
+    <div class="o-container p-editor__layout">
+        <div class="p-editor__sidebar">
+            <partial name="~/Views/Editor/Partials/_StickerPicker.cshtml" model="Model.StickerGroups" />
+            <partial name="~/Views/Editor/Partials/_LayersPanel.cshtml" />
+        </div>
+
+        <div class="p-editor__workspace">
+            <partial name="~/Views/Editor/Partials/_EditorStage.cshtml" model="Model.Stage" />
+        </div>
+
+        <div class="p-editor__history">
+            <partial name="~/Views/Editor/Partials/_ThumbStrip.cshtml" model="Model.SeedThumbnails" />
+        </div>
+    </div>
+</section>
