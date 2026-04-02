@@ -1,3 +1,4 @@
+using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
@@ -5,39 +6,29 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Camagru.Infrastructure.Persistence.Migrations
 {
     /// <inheritdoc />
+    [DbContext(typeof(AppDbContext))]
+    [Migration("20260313170000_SeedOverlayData")]
     public partial class SeedOverlayData : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.InsertData(
-                table: "Overlays",
-                columns: new[] { "Name", "Category", "FilePath", "DisplayOrder", "CreatedAt" },
-                values: new object[,]
-                {
-                    { "Hearts", "Hearts", "/overlays/hearts.png", 0, DateTime.UtcNow },
-                    { "Stars", "Stars", "/overlays/stars.png", 1, DateTime.UtcNow },
-                    { "Emoji", "Emoji", "/overlays/emoji.png", 2, DateTime.UtcNow }
-                });
+            migrationBuilder.Sql("""
+                INSERT INTO "Overlays" ("Name", "Category", "FilePath", "DisplayOrder", "CreatedAt")
+                VALUES
+                    ('Hearts', 'Hearts', '/overlays/hearts.png', 0, CURRENT_TIMESTAMP),
+                    ('Stars', 'Stars', '/overlays/stars.png', 1, CURRENT_TIMESTAMP),
+                    ('Emoji', 'Emoji', '/overlays/emoji.png', 2, CURRENT_TIMESTAMP);
+                """);
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DeleteData(
-                table: "Overlays",
-                keyColumn: "Name",
-                keyValue: "Hearts");
-
-            migrationBuilder.DeleteData(
-                table: "Overlays",
-                keyColumn: "Name",
-                keyValue: "Stars");
-
-            migrationBuilder.DeleteData(
-                table: "Overlays",
-                keyColumn: "Name",
-                keyValue: "Emoji");
+            migrationBuilder.Sql("""
+                DELETE FROM "Overlays"
+                WHERE "Name" IN ('Hearts', 'Stars', 'Emoji');
+                """);
         }
     }
 }

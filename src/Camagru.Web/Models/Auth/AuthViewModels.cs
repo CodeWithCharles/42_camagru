@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 
 namespace Camagru.Web.Models.Auth;
 
@@ -13,6 +14,7 @@ public class LoginPageViewModel
     public bool ShowConfirmationFallback { get; set; }
     public bool ConfirmationResendAvailable { get; set; }
     public string? MissingConfirmationContractName { get; set; }
+    [ValidateNever]
     public ResendConfirmationFormViewModel ResendConfirmation { get; set; } = new();
 }
 

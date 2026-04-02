@@ -5,8 +5,12 @@ using Camagru.Infrastructure.Persistence.Init;
 using Camagru.Web.Options;
 using Camagru.Web.Services;
 using DotNetEnv;
+using Microsoft.AspNetCore.Antiforgery;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.DataProtection;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.Extensions.Options;
 
 if (Environment.GetEnvironmentVariable("DOTNET_RUNNING_IN_CONTAINER") != "true")
@@ -43,7 +47,25 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
         options.SlidingExpiration = true;
     });
 
-var dataProtectionDirectory = Path.Combine(builder.Environment.ContentRootPath, ".aspnet", "DataProtection-Keys");
+builder.Services.Configure<CookieTempDataProviderOptions>(options =>
+{
+    options.Cookie.Name = ".Camagru.TempData";
+    options.Cookie.HttpOnly = true;
+    options.Cookie.IsEssential = true;
+    options.Cookie.SameSite = SameSiteMode.Lax;
+    options.Cookie.SecurePolicy = CookieSecurePolicy.SameAsRequest;
+});
+
+builder.Services.AddAntiforgery(options =>
+{
+    options.Cookie.Name = ".Camagru.Antiforgery";
+    options.Cookie.HttpOnly = true;
+    options.Cookie.IsEssential = true;
+    options.Cookie.SameSite = SameSiteMode.Lax;
+    options.Cookie.SecurePolicy = CookieSecurePolicy.SameAsRequest;
+});
+
+var dataProtectionDirectory = ResolveDataProtectionDirectory(builder.Environment);
 Directory.CreateDirectory(dataProtectionDirectory);
 
 builder.Services.AddDataProtection()
@@ -87,3 +109,19 @@ app.MapControllerRoute(
     .WithStaticAssets();
 
 app.Run();
+
+static string ResolveDataProtectionDirectory(IHostEnvironment environment)
+{
+    var configuredPath = Environment.GetEnvironmentVariable("DATA_PROTECTION_KEYS_DIRECTORY");
+    if (!string.IsNullOrWhiteSpace(configuredPath))
+    {
+        return configuredPath;
+    }
+
+    if (Environment.GetEnvironmentVariable("DOTNET_RUNNING_IN_CONTAINER") == "true")
+    {
+        return "/root/.aspnet/DataProtection-Keys";
+    }
+
+    return Path.Combine(environment.ContentRootPath, ".aspnet", "DataProtection-Keys");
+}

@@ -38,6 +38,7 @@ services:
       SMTP_USER: ${SMTP_USER}
       SMTP_PASSWORD: ${SMTP_PASSWORD}
       APP_BASE_URL: ${APP_BASE_URL}
+      DATA_PROTECTION_KEYS_DIRECTORY: /root/.aspnet/DataProtection-Keys
       DOTNET_RUNNING_IN_CONTAINER: "true"
       ASPNETCORE_ENVIRONMENT: Production
     ports:

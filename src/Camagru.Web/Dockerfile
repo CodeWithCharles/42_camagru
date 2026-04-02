@@ -22,6 +22,10 @@ RUN dotnet publish src/Camagru.Web/Camagru.Web.csproj \
 FROM mcr.microsoft.com/dotnet/aspnet:10.0 AS runtime
 WORKDIR /app
 
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends libgssapi-krb5-2 \
+    && rm -rf /var/lib/apt/lists/*
+
 # Create uploads directory
 RUN mkdir -p wwwroot/uploads
 

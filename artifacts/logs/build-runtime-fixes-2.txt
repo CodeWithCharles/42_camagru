@@ -1,0 +1,15 @@
+
+  Determining projects to restore...
+  All projects are up-to-date for restore.
+  Camagru.Domain -> /tmp/camagru/src/Camagru.Domain/bin/Debug/net10.0/Camagru.Domain.dll
+  Camagru.Application -> /tmp/camagru/src/Camagru.Application/bin/Debug/net10.0/Camagru.Application.dll
+  Camagru.Infrastructure -> /tmp/camagru/src/Camagru.Infrastructure/bin/Debug/net10.0/Camagru.Infrastructure.dll
+/tmp/camagru/src/Camagru.Web/Program.cs(49,28): error CS0246: The type or namespace name 'CookieTempDataProviderOptions' could not be found (are you missing a using directive or an assembly reference?) [/tmp/camagru/src/Camagru.Web/Camagru.Web.csproj]
+
+Build FAILED.
+
+/tmp/camagru/src/Camagru.Web/Program.cs(49,28): error CS0246: The type or namespace name 'CookieTempDataProviderOptions' could not be found (are you missing a using directive or an assembly reference?) [/tmp/camagru/src/Camagru.Web/Camagru.Web.csproj]
+    0 Warning(s)
+    1 Error(s)
+
+Time Elapsed 00:00:05.31

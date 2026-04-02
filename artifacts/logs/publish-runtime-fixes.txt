@@ -1,0 +1,8 @@
+
+  Determining projects to restore...
+  All projects are up-to-date for restore.
+  Camagru.Domain -> /tmp/camagru/src/Camagru.Domain/bin/Release/net10.0/Camagru.Domain.dll
+  Camagru.Application -> /tmp/camagru/src/Camagru.Application/bin/Release/net10.0/Camagru.Application.dll
+  Camagru.Infrastructure -> /tmp/camagru/src/Camagru.Infrastructure/bin/Release/net10.0/Camagru.Infrastructure.dll
+  Camagru.Web -> /tmp/camagru/src/Camagru.Web/bin/Release/net10.0/Camagru.Web.dll
+  Camagru.Web -> /tmp/camagru/artifacts/publish/
