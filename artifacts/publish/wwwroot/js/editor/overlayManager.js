@@ -31,6 +31,7 @@ export function createOverlayManager(initialState = []) {
       const offset = overlays.length * 18;
       const nextOverlay = {
         id: `overlay-${crypto.randomUUID()}`,
+        overlayId: input.overlayId ?? 0,
         name: input.name,
         src: input.src,
         accent: input.accent,
@@ -38,7 +39,8 @@ export function createOverlayManager(initialState = []) {
         y: 80 + offset,
         width: 120,
         height: 120,
-        zIndex: overlays.length + 1
+        zIndex: overlays.length + 1,
+        rotationDegrees: input.rotationDegrees ?? 0
       };
 
       overlays = normalize([...overlays, nextOverlay]);

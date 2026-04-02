@@ -26,6 +26,7 @@ public class StickerCatalogService
                 return new StickerViewModel
                 {
                     Id = $"sticker-{index + 1}",
+                    OverlayId = index + 1,
                     Name = ToTitleCase(fileName),
                     Category = fileName is "hearts" or "stars" ? "Pulse" : "Signals",
                     ImageUrl = $"/images/stickers/{Path.GetFileName(filePath)}",

@@ -27,14 +27,14 @@ else {
 dotnet --info | Tee-Object -FilePath "artifacts/logs/dotnet-info.txt"
 if ($LASTEXITCODE -ne 0) { throw "dotnet --info failed." }
 
-dotnet build $SlnPath -c Debug -m:1 /nr:false -v normal | Tee-Object -FilePath "artifacts/logs/build-debug.txt"
+dotnet build $SlnPath -c Debug -m:1 /nr:false -p:UseSharedCompilation=false -v normal | Tee-Object -FilePath "artifacts/logs/build-debug.txt"
 if ($LASTEXITCODE -ne 0) { throw "dotnet build failed." }
 
-dotnet build $SlnPath -c Debug -m:1 /nr:false -bl:"artifacts/logs/build-debug.binlog" -v minimal
+dotnet build $SlnPath -c Debug -m:1 /nr:false -p:UseSharedCompilation=false -bl:"artifacts/logs/build-debug.binlog" -v minimal
 if ($LASTEXITCODE -ne 0) { throw "dotnet build binlog generation failed." }
 
-dotnet test $SlnPath -c Debug --no-build -m:1 /nr:false -v normal | Tee-Object -FilePath "artifacts/logs/test-debug.txt"
+dotnet test $SlnPath -c Debug --no-build -m:1 /nr:false -p:UseSharedCompilation=false -v normal | Tee-Object -FilePath "artifacts/logs/test-debug.txt"
 if ($LASTEXITCODE -ne 0) { throw "dotnet test failed." }
 
-dotnet publish "src/Camagru.Web/Camagru.Web.csproj" -c Release -m:1 /nr:false -o "artifacts/publish" -v normal | Tee-Object -FilePath "artifacts/logs/publish-release.txt"
+dotnet publish "src/Camagru.Web/Camagru.Web.csproj" -c Release -m:1 /nr:false -p:UseSharedCompilation=false -o "artifacts/publish" -v normal | Tee-Object -FilePath "artifacts/logs/publish-release.txt"
 if ($LASTEXITCODE -ne 0) { throw "dotnet publish failed." }

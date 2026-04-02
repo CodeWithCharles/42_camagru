@@ -19,7 +19,14 @@ public static class ApplicationExtensions
         services.AddScoped<ChangeEmailUseCase>();
         services.AddScoped<DeleteAccountUseCase>();
         services.AddScoped<UpdateNotificationPreferencesUseCase>();
+        services.AddScoped<ResendConfirmationEmailUseCase>();
         services.AddScoped<GetAvailableOverlaysUseCase>();
+        services.AddScoped<ListGalleryPostsUseCase>();
+        services.AddScoped<GetPostDetailsUseCase>();
+        services.AddScoped<ToggleLikeUseCase>();
+        services.AddScoped<AddCommentUseCase>();
+        services.AddScoped<DeletePostUseCase>();
+        services.AddScoped<PublishMontageUseCase>();
 
         return services;
     }

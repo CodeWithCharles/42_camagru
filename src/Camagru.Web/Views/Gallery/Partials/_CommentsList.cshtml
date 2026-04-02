@@ -1,0 +1,23 @@
+@model IReadOnlyList<GalleryCommentViewModel>
+
+@if (Model.Count > 0)
+{
+    @foreach (var comment in Model)
+    {
+        <article class="c-comment">
+            <div class="c-comment__meta">
+                <strong>@comment.AuthorName</strong>
+                <span>@comment.AuthorHandle</span>
+                <small>@comment.CreatedLabel</small>
+            </div>
+            <p>@comment.Content</p>
+        </article>
+    }
+}
+else
+{
+    <div class="c-empty-state c-empty-state--compact">
+        <strong>No comments yet</strong>
+        <p>This post is public, but the thread is still quiet.</p>
+    </div>
+}

@@ -4,10 +4,8 @@ using Camagru.Infrastructure.Options;
 using Camagru.Infrastructure.Persistence;
 using Camagru.Infrastructure.Persistence.Repositories;
 using Camagru.Infrastructure.Services;
-using Camagru.Infrastructure.UseCases.Posts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Options;
 
 namespace Camagru.Infrastructure.DependencyInjection;
 
@@ -36,7 +34,8 @@ public static class PersistenceExtensions
 		services.AddScoped<IImageRepository, ImageRepository>();
 		services.AddScoped<IPostRepository, PostRepository>();
 		services.AddScoped<IOverlayRepository, OverlayRepository>();
-		services.AddScoped<CreatePostUseCase>();
+		services.AddScoped<IImageComposer, ServerImageComposer>();
+		services.AddScoped<IImageStorage, LocalImageStorage>();
 
 		return services;
 	}

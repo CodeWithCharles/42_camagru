@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Camagru.Web.Controllers;
 
+[Authorize]
 [Route("[controller]")]
 public class ProfileController : Controller
 {
@@ -40,7 +41,7 @@ public class ProfileController : Controller
     {
         if (!TryGetCurrentUserId(out var userId))
         {
-            TempData["Toast.Info"] = "Log in to manage your profile and account settings.";
+            TempData["Toast.Info"] = "Sign in again to manage your profile and account settings.";
             return RedirectToAction("Login", "Auth", new { returnUrl = Url.Action(nameof(Index), "Profile") });
         }
 

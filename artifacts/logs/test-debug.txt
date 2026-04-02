@@ -1,11 +1,12 @@
-Build started 04/01/2026 14:51:41.
-Project "/home/rhamiel/camagru/Camagru.slnx" on node 1 (VSTest target(s)).
+Build started 04/02/2026 15:48:24.
+
+Project "/tmp/camagru/Camagru.sln" on node 1 (VSTest target(s)).
 ValidateSolutionConfiguration:
   Building solution configuration "Debug|Any CPU".
-Done Building Project "/home/rhamiel/camagru/Camagru.slnx" (VSTest target(s)).
+Done Building Project "/tmp/camagru/Camagru.sln" (VSTest target(s)).
 
 Build succeeded.
     0 Warning(s)
     0 Error(s)
 
-Time Elapsed 00:00:00.41
+Time Elapsed 00:00:01.03

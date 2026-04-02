@@ -13,6 +13,7 @@ public class LoginPageViewModel
     public bool ShowConfirmationFallback { get; set; }
     public bool ConfirmationResendAvailable { get; set; }
     public string? MissingConfirmationContractName { get; set; }
+    public ResendConfirmationFormViewModel ResendConfirmation { get; set; } = new();
 }
 
 public class ForgotPasswordPageViewModel
@@ -51,6 +52,12 @@ public class ConfirmEmailPageViewModel
     public string? SecondaryActionText { get; set; }
     public string? SecondaryActionUrl { get; set; }
     public string? MissingContractName { get; set; }
+    public ResendConfirmationFormViewModel ResendConfirmation { get; set; } = new();
+}
+
+public class ResendConfirmationConfirmationViewModel
+{
+    public string? Email { get; set; }
 }
 
 public class RegisterFormViewModel
@@ -93,6 +100,16 @@ public class ForgotPasswordFormViewModel
     [Required(ErrorMessage = "Email is required")]
     [EmailAddress(ErrorMessage = "Invalid email address format")]
     public string Email { get; set; } = string.Empty;
+}
+
+public class ResendConfirmationFormViewModel
+{
+    [Required(ErrorMessage = "Email is required")]
+    [EmailAddress(ErrorMessage = "Invalid email address format")]
+    public string Email { get; set; } = string.Empty;
+
+    public string? ReturnUrl { get; set; }
+    public string Origin { get; set; } = "login";
 }
 
 public class ResetPasswordFormViewModel

@@ -1,0 +1,7 @@
+MSBuild version 18.3.0-release-26119-122+40cd698e5 for .NET
+MSBUILD : error MSB1008: Only one project can be specified.
+    Full command line: '/usr/share/dotnet/sdk/10.0.200/MSBuild.dll -maxcpucount --verbosity:m -tlp:default=auto --property:ExcludeRestorePackageImports=true --property:_RestoreSolutionFileUsed=true --property:SolutionDir=/tmp/camagru/ --property:SolutionName=Camagru --property:SolutionFileName=Camagru.slnx --property:SolutionPath=/tmp/camagru/Camagru.slnx --property:SolutionExt=.slnx --property:Configuration=Debug --property:Platform=AnyCPU --target:_IsProjectRestoreSupported --verbosity:minimal ./src/Camagru.Application/Camagru.Application.csproj ./src/Camagru.Domain/Camagru.Domain.csproj ./src/Camagru.Infrastructure/Camagru.Infrastructure.csproj ./src/Camagru.Web/Camagru.Web.csproj -distributedlogger:Microsoft.DotNet.Cli.Commands.MSBuild.MSBuildLogger,/usr/share/dotnet/sdk/10.0.200/dotnet.dll*Microsoft.DotNet.Cli.Commands.MSBuild.MSBuildForwardingLogger,/usr/share/dotnet/sdk/10.0.200/dotnet.dll'
+  Switches appended by response files:
+Switch: ./src/Camagru.Domain/Camagru.Domain.csproj
+
+For switch syntax, type "MSBuild -help"

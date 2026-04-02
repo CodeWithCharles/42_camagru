@@ -38,6 +38,11 @@
                 <span>Resend is staged in the UI, but the Application contract is missing: <code>@Model.MissingConfirmationContractName</code>.</span>
             }
         </div>
+
+        @if (Model.ConfirmationResendAvailable)
+        {
+            <partial name="~/Views/Auth/Partials/_ResendConfirmationForm.cshtml" model="Model.ResendConfirmation" />
+        }
     }
 
     <button type="submit" class="c-button c-button--primary c-button--block">Sign in</button>

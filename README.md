@@ -7,13 +7,19 @@ Camagru is split into four projects that preserve the existing Clean Architectur
 - `src/Camagru.Infrastructure`
 - `src/Camagru.Web`
 
-The current frontend work is intentionally isolated to `Camagru.Web`. Authentication and profile flows are wired to existing Application-layer use cases, while gallery mutations and editor publishing remain interactive Web placeholders that can be replaced later with real use cases without changing the UI structure.
+The solution now wires the core subject flows end to end:
 
-## Auth Wiring And Placeholders
+- Auth and profile flows are wired through Application-layer use cases.
+- Gallery listing, modal details, likes, comments, and owner-only deletion are persisted.
+- Comment notification emails respect the profile notification preference.
+- The editor publishes a real server-composed montage while keeping the existing Razor/CSS/ES-module frontend architecture intact.
+
+## Wiring Notes
 
 - Fully wired to Application use cases:
   - Register
   - Confirm email
+  - Resend confirmation email
   - Login
   - Logout
   - Forgot password
@@ -24,32 +30,59 @@ The current frontend work is intentionally isolated to `Camagru.Web`. Authentica
   - Change password
   - Update notification preferences
   - Delete account
-- Feature-flagged or documented placeholders in Web:
-  - Resend confirmation email
-  - Gallery like persistence
-  - Gallery comment persistence
-  - Gallery post deletion
-  - Editor publish and save flow
+- Gallery and editor flows now wired through Application + Infrastructure:
+  - Persisted public gallery feed with pagination
+  - Deep-linkable post modal with real comments and like counts
+  - Toggle like
+  - Add comment with non-blocking email notification warnings
+  - Owner-only post deletion
+  - Server-side montage composition and publish
+  - Server-side editor upload validation for PNG/JPEG files
+- Still intentionally lightweight:
+  - Draft tray items remain browser-local until published
+  - Overlay catalog is rendered into the page instead of exposed as an AJAX endpoint
+  - Webcam denial falls back to the upload path in the editor UI
 - Important nuance:
   - `UpdateProfileUseCase` accepts an email field, but the current Application implementation does not actually apply email changes. The Web UI therefore routes email updates only through `ChangeEmailUseCase`.
-- Missing Application contract currently documented in the UI:
-  - `ResendConfirmationEmailUseCase`
+
+## Data Model Overview
+
+- `User` owns many `Post`, `Comment`, and `Like` records and stores the email notification preference.
+- `Post` belongs to one user and contains the published montage metadata plus one or more `Image` records.
+- `Comment` belongs to one post and one user.
+- `Like` is unique per `(PostId, UserId)`.
+- `Overlay` stores the reusable sticker catalog that the editor and server-side compositor share.
 
 ## How To Run
 
-1. Restore and build the solution:
+1. Configure the required environment variables:
 
 ```bash
-dotnet build ./Camagru.slnx
+POSTGRES_HOST=
+POSTGRES_PORT=
+POSTGRES_DB=
+POSTGRES_USER=
+POSTGRES_PASSWORD=
+SMTP_HOST=
+SMTP_PORT=
+SMTP_USER=
+SMTP_PASSWORD=
+APP_BASE_URL=
 ```
 
-2. Run the MVC app:
+2. Restore and build the solution:
+
+```bash
+MSBuildEnableWorkloadResolver=false dotnet build ./Camagru.sln -m:1 /nr:false -p:UseSharedCompilation=false
+```
+
+3. Run the MVC app:
 
 ```bash
 dotnet run --project src/Camagru.Web/Camagru.Web.csproj
 ```
 
-3. Run the full validation script:
+4. Run the full validation script:
 
 ```bash
 ./scripts/verify.sh
@@ -108,12 +141,13 @@ flowchart TD
     Confirm --> ConfirmOK["Success state"]
     Confirm --> Already["Already confirmed state"]
     Confirm --> ConfirmFail["Invalid or missing token"]
-    ConfirmFail --> ResendFallback["FeatureNotReady fallback for resend"]
+    ConfirmFail --> Resend["Resend confirmation form"]
+    Resend --> ResendMail["Generic confirmation page"]
 
     Login["Login form"] --> LoginOK["Cookie sign-in plus returnUrl"]
     Login --> LoginBad["Invalid username or password"]
     Login --> Unconfirmed["Unconfirmed email login blocked"]
-    Unconfirmed --> ResendFallback
+    Unconfirmed --> Resend
 
     Forgot["Forgot password form"] --> ForgotMail["Always show confirmation page"]
     ForgotMail --> Reset["Reset password link"]
@@ -135,11 +169,15 @@ flowchart TD
 
     Auth["Authenticated user"] --> Like["POST /Gallery/Like"]
     Auth --> Comment["POST /Gallery/Comment"]
-    Like --> Placeholder["Toast: persistence not wired yet"]
-    Comment --> Placeholder
+    Like --> Toggle["Like persisted and count updated"]
+    Comment --> Persist["Comment persisted"]
+    Persist --> Notify{"Author notifications enabled?"}
+    Notify -->|Yes| Email["Send comment email"]
+    Notify -->|No| Done["Redirect back to modal"]
+    Email --> Warning["Email failure logs warning but keeps comment"]
 
     OwnPost["Own post in modal"] --> Delete["POST /Gallery/Delete"]
-    Delete --> DeletePlaceholder["FeatureNotReady: DeletePostUseCase missing"]
+    Delete --> DeleteOK["Post removed and gallery refreshed"]
     OtherPost["Other user's post"] --> Forbidden["403 if deletion attempted"]
 ```
 
@@ -156,6 +194,9 @@ flowchart TD
     Preview --> Tray["Local thumbnail tray"]
     Tray --> View["View stored draft"]
     Tray --> Delete["Delete local draft"]
-    Tray --> Publish["Publish placeholder"]
-    Publish --> Feature["Toast: server publish not wired yet"]
+    Preview --> Publish["POST /Editor/Publish"]
+    Tray --> Replay["Replay draft into publish form"]
+    Replay --> Publish
+    Publish --> Compose["Server-side composition in Infrastructure"]
+    Compose --> Feed["Redirect to /Gallery?page=1&postId=NEW"]
 ```

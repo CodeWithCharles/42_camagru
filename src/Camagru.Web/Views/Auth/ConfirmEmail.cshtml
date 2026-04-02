@@ -25,5 +25,12 @@
                 <a class="c-button c-button--ghost" href="@Model.SecondaryActionUrl">@Model.SecondaryActionText</a>
             }
         </div>
+
+        @if (!Model.IsSuccess && !Model.IsAlreadyConfirmed && Model.CanResendConfirmation)
+        {
+            <div class="c-form">
+                <partial name="~/Views/Auth/Partials/_ResendConfirmationForm.cshtml" model="Model.ResendConfirmation" />
+            </div>
+        }
     </article>
 </section>

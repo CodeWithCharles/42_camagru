@@ -1,5 +1,6 @@
 using Camagru.Application.Interfaces;
 using Microsoft.Extensions.Configuration;
+using System.Net;
 
 namespace Camagru.Infrastructure.Services;
 
@@ -178,6 +179,48 @@ public class EmailTemplateBuilder : IEmailTemplateBuilder
         <p>Your account is now active. Start creating and sharing amazing photo compositions!</p>
         <a href='{_baseUrl}/gallery' class='button'>Explore Gallery</a>
         <div class='footer'>
+            <p>&copy; 2026 Camagru. All rights reserved.</p>
+        </div>
+    </div>
+</body>
+</html>";
+    }
+
+    public string BuildCommentNotification(string recipientUsername, string commenterUsername, string commentText, int postId)
+    {
+        var postUrl = $"{_baseUrl}/Gallery?postId={postId}";
+        var encodedComment = WebUtility.HtmlEncode(commentText);
+
+        return $@"<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        body {{ font-family: Arial, sans-serif; line-height: 1.6; color: #333; }}
+        .container {{ max-width: 600px; margin: 0 auto; padding: 20px; }}
+        .card {{ background-color: #eef7ff; padding: 16px; border-left: 4px solid #17a2b8; margin: 20px 0; }}
+        .button {{
+            display: inline-block;
+            padding: 12px 24px;
+            background-color: #17a2b8;
+            color: white;
+            text-decoration: none;
+            border-radius: 4px;
+            margin: 20px 0;
+        }}
+        .footer {{ margin-top: 30px; padding-top: 20px; border-top: 1px solid #ddd; font-size: 12px; color: #666; }}
+    </style>
+</head>
+<body>
+    <div class='container'>
+        <h1>New comment on your montage</h1>
+        <p>Hello {recipientUsername},</p>
+        <p><strong>{commenterUsername}</strong> just commented on one of your Camagru posts.</p>
+        <div class='card'>
+            {encodedComment}
+        </div>
+        <a href='{postUrl}' class='button'>Open the post</a>
+        <div class='footer'>
+            <p>You can disable comment notification emails from your profile settings.</p>
             <p>&copy; 2026 Camagru. All rights reserved.</p>
         </div>
     </div>

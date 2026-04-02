@@ -1,18 +1,20 @@
 # Camagru Web UI
 
-This frontend implementation stays inside `Camagru.Web` and keeps the authentication/profile flows wired to existing Application-layer use cases. The gallery interactions and editor publishing workflows are intentionally staged as Web-only placeholders so they can be replaced later without changing the UI architecture.
+This frontend implementation stays inside `Camagru.Web`, but it now sits on top of fully wired auth, gallery, and publish flows across the solution. The UI structure remains modular Razor + CSS + ES modules, while the actual persistence and server-side composition now run through Application and Infrastructure services.
 
 ## How To Run
 
 1. Configure the existing environment variables used by the solution for PostgreSQL and SMTP.
-2. Start the app with `dotnet run --project src/Camagru.Web/Camagru.Web.csproj`.
-3. Open `/Gallery` for the public feed or `/Editor` after signing in.
+2. Build the solution with `MSBuildEnableWorkloadResolver=false dotnet build ./Camagru.sln -m:1 /nr:false -p:UseSharedCompilation=false`.
+3. Start the app with `dotnet run --project src/Camagru.Web/Camagru.Web.csproj`.
+4. Open `/Gallery` for the public feed or `/Editor` after signing in.
 
 ## Wiring Notes
 
 - Fully wired to Application use cases:
   - Register
   - Confirm email
+  - Resend confirmation email
   - Login and logout
   - Forgot password
   - Reset password
@@ -22,16 +24,18 @@ This frontend implementation stays inside `Camagru.Web` and keeps the authentica
   - Change password
   - Update notification preferences
   - Delete account
-- Explicit Web-only placeholders:
-  - Gallery like persistence
-  - Gallery comment persistence and email-on-comment flow
-  - Gallery post deletion use case
-  - Editor publish/save flow
-  - Resend confirmation email flow
+- Fully wired gallery/editor flows:
+  - Gallery list and modal details from persisted posts
+  - Like toggle persistence
+  - Comment persistence plus optional author email notifications
+  - Owner-only post deletion
+  - Editor publish through server-side image composition
+  - Editor upload validation for PNG/JPEG files with server-side size and MIME checks
+- Still local-only by design:
+  - Draft tray persistence before publish
+  - Webcam denial or unavailability nudges the user to the upload flow
 - Important nuance:
   - `UpdateProfileUseCase` accepts `Email` in its request contract, but the current implementation does not apply email changes. The UI therefore routes email updates only through `ChangeEmailUseCase`.
-- Missing contract documented in the UI:
-  - `ResendConfirmationEmailUseCase`
 
 ## Site Map And Access
 
@@ -78,12 +82,13 @@ flowchart TD
     Confirm --> ConfirmOK["Success state"]
     Confirm --> Already["Already confirmed state"]
     Confirm --> ConfirmFail["Invalid or missing token"]
-    ConfirmFail --> ResendFallback["Resend path shown as FeatureNotReady"]
+    ConfirmFail --> Resend["Resend confirmation form"]
+    Resend --> ResendMail["Generic confirmation page"]
 
     Login["Login form"] --> LoginOK["Cookie sign-in + returnUrl"]
     Login --> LoginBad["Invalid username/password"]
     Login --> Unconfirmed["Unconfirmed email login blocked"]
-    Unconfirmed --> ResendFallback
+    Unconfirmed --> Resend
 
     Forgot["Forgot password form"] --> ForgotMail["Always show confirmation page"]
     ForgotMail --> Reset["Reset password link"]
@@ -105,11 +110,15 @@ flowchart TD
 
     Auth["Authenticated user"] --> Like["POST /Gallery/Like"]
     Auth --> Comment["POST /Gallery/Comment"]
-    Like --> Placeholder["Toast: persistence not wired yet"]
-    Comment --> Placeholder
+    Like --> Toggle["Like persisted"]
+    Comment --> Persist["Comment persisted"]
+    Persist --> Notify{"Author notifications enabled?"}
+    Notify -->|Yes| Email["Send comment email"]
+    Notify -->|No| Done["Redirect to modal"]
+    Email --> Warning["Email failure only shows non-blocking warning"]
 
     OwnPost["Own post in modal"] --> Delete["POST /Gallery/Delete"]
-    Delete --> DeletePlaceholder["FeatureNotReady: DeletePostUseCase missing"]
+    Delete --> DeleteOK["Post removed and gallery refreshed"]
     OtherPost["Other user's post"] --> Forbidden["403 if deletion attempted"]
 ```
 
@@ -126,6 +135,9 @@ flowchart TD
     Preview --> Tray["Local thumbnail tray"]
     Tray --> View["View stored draft"]
     Tray --> Delete["Delete local draft"]
-    Tray --> Publish["Publish placeholder"]
-    Publish --> Feature["Toast: server publish not wired yet"]
+    Preview --> Publish["POST /Editor/Publish"]
+    Tray --> Replay["Replay draft into publish form"]
+    Replay --> Publish
+    Publish --> Compose["Server-side composition"]
+    Compose --> Feed["Redirect to new gallery modal"]
 ```

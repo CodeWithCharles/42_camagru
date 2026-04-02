@@ -43,12 +43,13 @@
                                 data-share-title="Camagru post by @Model.AuthorName">Share</button>
                         @if (Model.IsOwnedByCurrentUser)
                         {
-                            <form asp-controller="Gallery" asp-action="Delete" method="post">
-                                @Html.AntiForgeryToken()
-                                <input type="hidden" name="PostId" value="@Model.Id" />
-                                <input type="hidden" name="ReturnUrl" value="@returnUrl" />
-                                <button type="submit" class="c-button c-button--danger">Delete my post</button>
-                            </form>
+                            <partial name="~/Views/Gallery/Partials/_DeletePostButton.cshtml" model='new GalleryDeletePostButtonViewModel
+                            {
+                                PostId = Model.Id,
+                                Page = Model.CurrentPage,
+                                ReturnUrl = returnUrl,
+                                ActionUrl = Model.DeleteActionUrl
+                            }' />
                         }
                     </div>
                 </section>
@@ -63,49 +64,32 @@
                     </div>
 
                     <div class="c-post-modal__comment-list">
-                        @if (Model.Comments.Count > 0)
-                        {
-                            @foreach (var comment in Model.Comments)
-                            {
-                                <article class="c-comment">
-                                    <div class="c-comment__meta">
-                                        <strong>@comment.AuthorName</strong>
-                                        <span>@comment.AuthorHandle</span>
-                                        <small>@comment.CreatedLabel</small>
-                                    </div>
-                                    <p>@comment.Content</p>
-                                </article>
-                            }
-                        }
-                        else
-                        {
-                            <div class="c-empty-state c-empty-state--compact">
-                                <strong>No comments yet</strong>
-                                <p>This post is public, but the thread is still quiet.</p>
-                            </div>
-                        }
+                        <partial name="~/Views/Gallery/Partials/_CommentsList.cshtml" model="Model.Comments" />
                     </div>
 
                     @if (Model.IsAuthenticated)
                     {
                         <div class="c-post-modal__interaction-row">
-                            <form asp-controller="Gallery" asp-action="Like" method="post" class="c-inline-form">
-                                @Html.AntiForgeryToken()
-                                <input type="hidden" name="PostId" value="@Model.Id" />
-                                <input type="hidden" name="ReturnUrl" value="@returnUrl" />
-                                <button type="submit" class="c-button c-button--primary">Like</button>
-                            </form>
+                            <partial name="~/Views/Gallery/Partials/_LikeButton.cshtml" model='new GalleryLikeButtonViewModel
+                            {
+                                PostId = Model.Id,
+                                Page = Model.CurrentPage,
+                                IsLikedByCurrentUser = Model.IsLikedByCurrentUser,
+                                ReturnUrl = returnUrl,
+                                ActionUrl = Model.LikeActionUrl
+                            }' />
 
                             <form asp-controller="Gallery" asp-action="Comment" method="post" class="c-inline-form c-inline-form--comment">
                                 @Html.AntiForgeryToken()
                                 <input type="hidden" name="PostId" value="@Model.Id" />
+                                <input type="hidden" name="Page" value="@Model.CurrentPage" />
                                 <input type="hidden" name="ReturnUrl" value="@returnUrl" />
                                 <label class="sr-only" for="comment-@Model.Id">Comment</label>
                                 <textarea id="comment-@Model.Id"
                                           class="c-input c-input--multiline"
                                           name="Comment"
                                           rows="3"
-                                          placeholder="Placeholder submission only for now."></textarea>
+                                          placeholder="Add a public comment..."></textarea>
                                 <button type="submit" class="c-button c-button--ghost">Post comment</button>
                             </form>
                         </div>

@@ -16,11 +16,13 @@ public class AuthController : Controller
     private const string RegisterEmailTempDataKey = "Auth.RegisterEmail";
     private const string RegisterUsernameTempDataKey = "Auth.RegisterUsername";
     private const string ForgotPasswordEmailTempDataKey = "Auth.ForgotPasswordEmail";
+    private const string ResendConfirmationEmailTempDataKey = "Auth.ResendConfirmationEmail";
     private readonly RegisterUseCase _registerUseCase;
     private readonly ConfirmEmailUseCase _confirmEmailUseCase;
     private readonly LoginUseCase _loginUseCase;
     private readonly RequestPasswordResetUseCase _requestPasswordResetUseCase;
     private readonly ResetPasswordUseCase _resetPasswordUseCase;
+    private readonly ResendConfirmationEmailUseCase _resendConfirmationEmailUseCase;
     private readonly IUserRepository _userRepository;
     private readonly UiFeatureFlags _uiFeatureFlags;
 
@@ -30,6 +32,7 @@ public class AuthController : Controller
         LoginUseCase loginUseCase,
         RequestPasswordResetUseCase requestPasswordResetUseCase,
         ResetPasswordUseCase resetPasswordUseCase,
+        ResendConfirmationEmailUseCase resendConfirmationEmailUseCase,
         IUserRepository userRepository,
         UiFeatureFlags uiFeatureFlags)
     {
@@ -38,6 +41,7 @@ public class AuthController : Controller
         _loginUseCase = loginUseCase;
         _requestPasswordResetUseCase = requestPasswordResetUseCase;
         _resetPasswordUseCase = resetPasswordUseCase;
+        _resendConfirmationEmailUseCase = resendConfirmationEmailUseCase;
         _userRepository = userRepository;
         _uiFeatureFlags = uiFeatureFlags;
     }
@@ -132,11 +136,25 @@ public class AuthController : Controller
     [HttpGet("Login")]
     public IActionResult Login(string? returnUrl = null)
     {
+        if (!string.IsNullOrWhiteSpace(returnUrl))
+        {
+            TempData["Toast.Info"] = returnUrl.Contains("/Editor", StringComparison.OrdinalIgnoreCase)
+                ? "Sign in to access the montage editor and private capture tray."
+                : returnUrl.Contains("/Profile", StringComparison.OrdinalIgnoreCase)
+                    ? "Sign in to manage your profile and account settings."
+                    : "Sign in to continue.";
+        }
+
         return View(new LoginPageViewModel
         {
             Form = new LoginFormViewModel
             {
                 ReturnUrl = returnUrl
+            },
+            ResendConfirmation = new ResendConfirmationFormViewModel
+            {
+                ReturnUrl = returnUrl,
+                Origin = "login"
             }
         });
     }
@@ -164,6 +182,8 @@ public class AuthController : Controller
                 model.ShowConfirmationFallback = true;
                 model.ConfirmationResendAvailable = _uiFeatureFlags.EnableConfirmationResend;
                 model.MissingConfirmationContractName = _uiFeatureFlags.EnableConfirmationResend ? null : "ResendConfirmationEmailUseCase";
+                model.ResendConfirmation.ReturnUrl = model.Form.ReturnUrl;
+                model.ResendConfirmation.Origin = "login";
                 ModelState.AddModelError("Form.Username", result.Error ?? "Please confirm your email before logging in");
             }
             else
@@ -242,6 +262,50 @@ public class AuthController : Controller
         });
     }
 
+    [HttpPost("ResendConfirmation")]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> ResendConfirmation(ResendConfirmationFormViewModel form)
+    {
+        if (!ModelState.IsValid)
+        {
+            if (string.Equals(form.Origin, "confirm", StringComparison.OrdinalIgnoreCase))
+            {
+                var failedConfirmation = BuildFailedConfirmationViewModel("The uplink could not be verified");
+                failedConfirmation.ResendConfirmation = form;
+                return View(nameof(ConfirmEmail), failedConfirmation);
+            }
+
+            return View(nameof(Login), new LoginPageViewModel
+            {
+                ShowConfirmationFallback = true,
+                ConfirmationResendAvailable = _uiFeatureFlags.EnableConfirmationResend,
+                Form = new LoginFormViewModel
+                {
+                    ReturnUrl = form.ReturnUrl
+                },
+                ResendConfirmation = form
+            });
+        }
+
+        await _resendConfirmationEmailUseCase.ExecuteAsync(new ResendConfirmationEmailRequest
+        {
+            Email = form.Email
+        });
+
+        TempData[ResendConfirmationEmailTempDataKey] = form.Email;
+        TempData["Toast.Info"] = "If the address belongs to an unconfirmed account, a fresh confirmation link is on the way.";
+        return RedirectToAction(nameof(ResendConfirmationConfirmation));
+    }
+
+    [HttpGet("ResendConfirmationConfirmation")]
+    public IActionResult ResendConfirmationConfirmation()
+    {
+        return View(new ResendConfirmationConfirmationViewModel
+        {
+            Email = TempData.Peek(ResendConfirmationEmailTempDataKey) as string
+        });
+    }
+
     [HttpGet("ResetPassword")]
     public async Task<IActionResult> ResetPassword(string? token)
     {
@@ -317,15 +381,15 @@ public class AuthController : Controller
             Message = message,
             PrimaryActionText = "Try login",
             PrimaryActionUrl = Url.Action(nameof(Login), "Auth") ?? "/Auth/Login",
-            SecondaryActionText = "Resend confirmation",
-            SecondaryActionUrl = Url.Action("FeatureNotReady", "Errors", new
-            {
-                feature = "confirmation resend",
-                missingContract = "ResendConfirmationEmailUseCase",
-                returnUrl = Url.Action(nameof(Login), "Auth")
-            }) ?? "/Errors/FeatureNotReady",
+            SecondaryActionText = "Open gallery",
+            SecondaryActionUrl = Url.Action("Index", "Gallery") ?? "/Gallery",
             CanResendConfirmation = _uiFeatureFlags.EnableConfirmationResend,
-            MissingContractName = _uiFeatureFlags.EnableConfirmationResend ? null : "ResendConfirmationEmailUseCase"
+            MissingContractName = _uiFeatureFlags.EnableConfirmationResend ? null : "ResendConfirmationEmailUseCase",
+            ResendConfirmation = new ResendConfirmationFormViewModel
+            {
+                Origin = "confirm",
+                ReturnUrl = Url.Action(nameof(Login), "Auth")
+            }
         };
     }
 

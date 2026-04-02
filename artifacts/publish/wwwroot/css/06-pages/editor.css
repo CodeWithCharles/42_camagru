@@ -18,6 +18,7 @@
 
 .p-editor__group-list,
 .p-editor__group,
+.p-editor__publish-form,
 .p-editor__preview-panel,
 .p-editor__thumb-list,
 .p-editor__history-panel,
@@ -39,6 +40,12 @@
     align-items: center;
     gap: var(--space-3);
     flex-wrap: wrap;
+}
+
+.p-editor__camera-note {
+    margin: 0;
+    color: var(--color-accent-cyan);
+    font-size: 0.9rem;
 }
 
 .p-editor__preview-frame {

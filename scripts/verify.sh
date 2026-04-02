@@ -23,7 +23,7 @@ else
 fi
 
 dotnet --info | tee artifacts/logs/dotnet-info.txt
-dotnet build "$SLN_PATH" -c Debug -m:1 /nr:false -v normal | tee artifacts/logs/build-debug.txt
-dotnet build "$SLN_PATH" -c Debug -m:1 /nr:false -bl:"artifacts/logs/build-debug.binlog" -v minimal
-dotnet test "$SLN_PATH" -c Debug --no-build -m:1 /nr:false -v normal | tee artifacts/logs/test-debug.txt
-dotnet publish "src/Camagru.Web/Camagru.Web.csproj" -c Release -m:1 /nr:false -o artifacts/publish -v normal | tee artifacts/logs/publish-release.txt
+dotnet build "$SLN_PATH" -c Debug -m:1 /nr:false -p:UseSharedCompilation=false -v normal | tee artifacts/logs/build-debug.txt
+dotnet build "$SLN_PATH" -c Debug -m:1 /nr:false -p:UseSharedCompilation=false -bl:"artifacts/logs/build-debug.binlog" -v minimal
+dotnet test "$SLN_PATH" -c Debug --no-build -m:1 /nr:false -p:UseSharedCompilation=false -v normal | tee artifacts/logs/test-debug.txt
+dotnet publish "src/Camagru.Web/Camagru.Web.csproj" -c Release -m:1 /nr:false -p:UseSharedCompilation=false -o artifacts/publish -v normal | tee artifacts/logs/publish-release.txt

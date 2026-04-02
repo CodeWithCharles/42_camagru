@@ -1,0 +1,7 @@
+<Project>
+  <PropertyGroup>
+    <NuGetAudit>false</NuGetAudit>
+    <RestoreBuildInParallel>false</RestoreBuildInParallel>
+    <UseSharedCompilation>false</UseSharedCompilation>
+  </PropertyGroup>
+</Project>

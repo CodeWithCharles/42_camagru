@@ -2,6 +2,7 @@ using Camagru.Application.DependencyInjection;
 using Camagru.Infrastructure.DependencyInjection;
 using Camagru.Infrastructure.Options;
 using Camagru.Infrastructure.Persistence.Init;
+using Camagru.Web.Options;
 using Camagru.Web.Services;
 using DotNetEnv;
 using Microsoft.AspNetCore.Authentication.Cookies;
@@ -18,12 +19,17 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddApplication();
 builder.Services.AddPersistenceServices();
 builder.Services.AddSmtpServices();
+builder.Services.Configure<EditorUploadOptions>(builder.Configuration.GetSection(EditorUploadOptions.SectionName));
 builder.Services.AddScoped<StickerCatalogService>();
 builder.Services.AddSingleton(new UiFeatureFlags
 {
-    EnableConfirmationResend = false,
-    EnableGalleryPersistence = false,
-    EnableEditorPublish = false
+    EnableConfirmationResend = true,
+    EnableGalleryPersistence = true,
+    EnableEditorPublish = true
+});
+builder.Services.Configure<StaticAssetOptions>(options =>
+{
+    options.WebRootPath = builder.Environment.WebRootPath;
 });
 
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
@@ -32,6 +38,7 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
         options.LoginPath = "/Auth/Login";
         options.LogoutPath = "/Auth/Logout";
         options.AccessDeniedPath = "/Errors/403";
+        options.ReturnUrlParameter = "returnUrl";
         options.ExpireTimeSpan = TimeSpan.FromHours(1);
         options.SlidingExpiration = true;
     });

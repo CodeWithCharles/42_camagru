@@ -1,0 +1,17 @@
+
+  Determining projects to restore...
+  All projects are up-to-date for restore.
+  Camagru.Domain -> /tmp/camagru/src/Camagru.Domain/bin/Debug/net10.0/Camagru.Domain.dll
+  Camagru.Application -> /tmp/camagru/src/Camagru.Application/bin/Debug/net10.0/Camagru.Application.dll
+  Camagru.Infrastructure -> /tmp/camagru/src/Camagru.Infrastructure/bin/Debug/net10.0/Camagru.Infrastructure.dll
+/tmp/camagru/src/Camagru.Web/Controllers/EditorController.cs(140,51): error CS1501: No overload for method 'OpenReadStream' takes 1 arguments [/tmp/camagru/src/Camagru.Web/Camagru.Web.csproj]
+/tmp/camagru/src/Camagru.Web/Controllers/EditorController.cs(146,33): warning CS8602: Dereference of a possibly null reference. [/tmp/camagru/src/Camagru.Web/Camagru.Web.csproj]
+
+Build FAILED.
+
+/tmp/camagru/src/Camagru.Web/Controllers/EditorController.cs(146,33): warning CS8602: Dereference of a possibly null reference. [/tmp/camagru/src/Camagru.Web/Camagru.Web.csproj]
+/tmp/camagru/src/Camagru.Web/Controllers/EditorController.cs(140,51): error CS1501: No overload for method 'OpenReadStream' takes 1 arguments [/tmp/camagru/src/Camagru.Web/Camagru.Web.csproj]
+    1 Warning(s)
+    1 Error(s)
+
+Time Elapsed 00:00:11.15

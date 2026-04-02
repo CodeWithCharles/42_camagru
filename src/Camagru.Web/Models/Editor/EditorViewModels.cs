@@ -19,6 +19,7 @@ public class StickerGroupViewModel
 public class StickerViewModel
 {
     public string Id { get; set; } = string.Empty;
+    public int OverlayId { get; set; }
     public string Name { get; set; } = string.Empty;
     public string Category { get; set; } = string.Empty;
     public string ImageUrl { get; set; } = string.Empty;
@@ -30,6 +31,8 @@ public class EditorStageViewModel
     public string EmptyTitle { get; set; } = string.Empty;
     public string EmptyDescription { get; set; } = string.Empty;
     public string PreviewNote { get; set; } = string.Empty;
+    public string PublishActionUrl { get; set; } = string.Empty;
+    public string Description { get; set; } = string.Empty;
 }
 
 public class EditorThumbnailViewModel
@@ -38,4 +41,27 @@ public class EditorThumbnailViewModel
     public string Title { get; set; } = string.Empty;
     public string PreviewUrl { get; set; } = string.Empty;
     public string CapturedAtLabel { get; set; } = string.Empty;
+}
+
+public class EditorPublishInputModel
+{
+    public string Description { get; set; } = string.Empty;
+    public IFormFile? BaseImage { get; set; }
+    public string OverlayPayloadJson { get; set; } = string.Empty;
+}
+
+public class EditorCompositionPayloadInputModel
+{
+    public List<EditorOverlayPayloadInputModel> Overlays { get; set; } = [];
+}
+
+public class EditorOverlayPayloadInputModel
+{
+    public int OverlayId { get; set; }
+    public double X { get; set; }
+    public double Y { get; set; }
+    public double Width { get; set; }
+    public double Height { get; set; }
+    public int ZIndex { get; set; }
+    public double RotationDegrees { get; set; }
 }

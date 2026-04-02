@@ -1,0 +1,32 @@
+<Project>
+  <Target Name="Build">
+    <MSBuild
+      Projects="$(MSBuildThisFileDirectory)src/Camagru.Domain/Camagru.Domain.csproj"
+      Targets="Build"
+      BuildInParallel="false"
+      StopOnFirstFailure="true"
+      Properties="Configuration=$(Configuration);Platform=AnyCPU;UseSharedCompilation=false"
+      RemoveProperties="AspNetConfiguration;BuildingSolutionFile;CurrentSolutionConfigurationContents;SolutionDir;SolutionExt;SolutionFileName;SolutionName;SolutionPath" />
+    <MSBuild
+      Projects="$(MSBuildThisFileDirectory)src/Camagru.Application/Camagru.Application.csproj"
+      Targets="Build"
+      BuildInParallel="false"
+      StopOnFirstFailure="true"
+      Properties="Configuration=$(Configuration);Platform=AnyCPU;UseSharedCompilation=false"
+      RemoveProperties="AspNetConfiguration;BuildingSolutionFile;CurrentSolutionConfigurationContents;SolutionDir;SolutionExt;SolutionFileName;SolutionName;SolutionPath" />
+    <MSBuild
+      Projects="$(MSBuildThisFileDirectory)src/Camagru.Infrastructure/Camagru.Infrastructure.csproj"
+      Targets="Build"
+      BuildInParallel="false"
+      StopOnFirstFailure="true"
+      Properties="Configuration=$(Configuration);Platform=AnyCPU;UseSharedCompilation=false"
+      RemoveProperties="AspNetConfiguration;BuildingSolutionFile;CurrentSolutionConfigurationContents;SolutionDir;SolutionExt;SolutionFileName;SolutionName;SolutionPath" />
+    <MSBuild
+      Projects="$(MSBuildThisFileDirectory)src/Camagru.Web/Camagru.Web.csproj"
+      Targets="Build"
+      BuildInParallel="false"
+      StopOnFirstFailure="true"
+      Properties="Configuration=$(Configuration);Platform=AnyCPU;UseSharedCompilation=false"
+      RemoveProperties="AspNetConfiguration;BuildingSolutionFile;CurrentSolutionConfigurationContents;SolutionDir;SolutionExt;SolutionFileName;SolutionName;SolutionPath" />
+  </Target>
+</Project>

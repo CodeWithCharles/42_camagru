@@ -26,6 +26,7 @@ public class GalleryPostCardViewModel
     public int ImageCount { get; set; }
     public string OpenUrl { get; set; } = string.Empty;
     public bool IsOwnedByCurrentUser { get; set; }
+    public bool IsLikedByCurrentUser { get; set; }
 }
 
 public class GalleryPostModalViewModel
@@ -41,6 +42,8 @@ public class GalleryPostModalViewModel
     public int CommentCount { get; set; }
     public bool IsAuthenticated { get; set; }
     public bool IsOwnedByCurrentUser { get; set; }
+    public bool IsLikedByCurrentUser { get; set; }
+    public int CurrentPage { get; set; }
     public string CloseUrl { get; set; } = string.Empty;
     public string ShareUrl { get; set; } = string.Empty;
     public string LoginUrl { get; set; } = string.Empty;
@@ -69,6 +72,24 @@ public class EmptyGalleryViewModel
 public class GalleryInteractionInputModel
 {
     public int PostId { get; set; }
+    public int Page { get; set; }
     public string ReturnUrl { get; set; } = string.Empty;
     public string? Comment { get; set; }
+}
+
+public class GalleryLikeButtonViewModel
+{
+    public int PostId { get; set; }
+    public int Page { get; set; }
+    public bool IsLikedByCurrentUser { get; set; }
+    public string ReturnUrl { get; set; } = string.Empty;
+    public string ActionUrl { get; set; } = string.Empty;
+}
+
+public class GalleryDeletePostButtonViewModel
+{
+    public int PostId { get; set; }
+    public int Page { get; set; }
+    public string ReturnUrl { get; set; } = string.Empty;
+    public string ActionUrl { get; set; } = string.Empty;
 }

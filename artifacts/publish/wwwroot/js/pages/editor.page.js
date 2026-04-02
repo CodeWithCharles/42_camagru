@@ -19,7 +19,13 @@ export function initEditorPage() {
   const image = $("[data-stage-image]", root);
   const emptyState = $("[data-stage-empty]", root);
   const uploadInput = $("[data-editor-upload]", root);
+  const uploadTrigger = $("[data-upload-trigger]", root);
+  const cameraFallbackNote = $("[data-camera-fallback-note]", root);
   const exportButton = $("[data-export-capture]", root);
+  const publishButton = $("[data-submit-publish]", root);
+  const publishForm = $("[data-publish-form]", root);
+  const publishBaseImageInput = $("[data-publish-base-image]", root);
+  const publishOverlayJsonInput = $("[data-publish-overlay-json]", root);
   const startButton = $("[data-start-camera]", root);
   const stopButton = $("[data-stop-camera]", root);
   const previewImage = $("[data-export-preview]", root);
@@ -40,8 +46,40 @@ export function initEditorPage() {
     stopButton
   });
 
-  const updateCaptureState = () => {
-    exportButton.disabled = !(captureController.hasBaseSource() && manager.hasOverlays());
+  const setCameraFallbackMessage = (message = "") => {
+    if (!cameraFallbackNote) {
+      return;
+    }
+
+    cameraFallbackNote.textContent = message;
+    cameraFallbackNote.hidden = message.length === 0;
+  };
+
+  const openUploadFallback = (message) => {
+    setCameraFallbackMessage(message);
+
+    try {
+      if (typeof uploadInput.showPicker === "function") {
+        uploadInput.showPicker();
+      } else {
+        uploadInput.click();
+      }
+    } catch {
+      // Some browsers require a direct user gesture for file pickers.
+    }
+
+    requestAnimationFrame(() => {
+      uploadTrigger?.focus();
+      cameraFallbackNote?.focus();
+    });
+  };
+
+  const updateActionState = () => {
+    const isReady = captureController.hasBaseSource() && manager.hasOverlays();
+    exportButton.disabled = !isReady;
+    if (publishButton) {
+      publishButton.disabled = !isReady;
+    }
   };
 
   const renderSurface = ({ overlays, selectedId }) => {
@@ -83,7 +121,7 @@ export function initEditorPage() {
       node.querySelector(".c-editor-overlay__label").textContent = overlay.name;
     });
 
-    updateCaptureState();
+    updateActionState();
   };
 
   manager.subscribe(renderSurface);
@@ -93,8 +131,10 @@ export function initEditorPage() {
   startButton.addEventListener("click", async () => {
     try {
       await captureController.startCamera();
-      updateCaptureState();
+      setCameraFallbackMessage();
+      updateActionState();
     } catch (error) {
+      openUploadFallback(error.message);
       pushToast({
         kind: "info",
         title: "Webcam unavailable",
@@ -105,7 +145,7 @@ export function initEditorPage() {
 
   stopButton.addEventListener("click", () => {
     captureController.stopCamera();
-    updateCaptureState();
+    updateActionState();
   });
 
   uploadInput.addEventListener("change", async () => {
@@ -116,7 +156,8 @@ export function initEditorPage() {
 
     try {
       await captureController.loadUpload(file);
-      updateCaptureState();
+      setCameraFallbackMessage();
+      updateActionState();
     } catch (error) {
       pushToast({
         kind: "error",
@@ -129,6 +170,7 @@ export function initEditorPage() {
   $$("[data-sticker-button]", root).forEach((button) => {
     button.addEventListener("click", () => {
       manager.addOverlay({
+        overlayId: Number(button.dataset.overlayId || 0),
         name: button.dataset.stickerName,
         src: button.dataset.stickerSrc,
         accent: button.dataset.stickerAccent
@@ -153,6 +195,7 @@ export function initEditorPage() {
         id: `draft-${crypto.randomUUID()}`,
         title: `Capture ${drafts.length + 1}`,
         previewUrl: exportResult.previewUrl,
+        baseImageDataUrl: exportResult.baseImageDataUrl,
         capturedAtLabel: new Date().toLocaleString(),
         payload: exportResult.payload
       };
@@ -175,7 +218,36 @@ export function initEditorPage() {
     }
   });
 
-  thumbList.addEventListener("click", (event) => {
+  if (publishForm) {
+    publishForm.addEventListener("submit", async (event) => {
+      event.preventDefault();
+
+      try {
+        const snapshot = manager.getState();
+        if (!captureController.hasBaseSource() || !manager.hasOverlays()) {
+          throw new Error("Choose a base image and at least one overlay before publishing.");
+        }
+
+        const payload = captureController.buildPublishPayload({
+          overlays: snapshot.overlays,
+          surface: overlaySurface
+        });
+
+        const baseFile = await captureController.createBaseImageFile();
+        assignFile(publishBaseImageInput, baseFile);
+        publishOverlayJsonInput.value = JSON.stringify(payload);
+        publishForm.submit();
+      } catch (error) {
+        pushToast({
+          kind: "error",
+          title: "Publish blocked",
+          message: error.message
+        });
+      }
+    });
+  }
+
+  thumbList.addEventListener("click", async (event) => {
     const button = event.target.closest("[data-thumb-action]");
     if (!button) {
       return;
@@ -207,11 +279,18 @@ export function initEditorPage() {
       return;
     }
 
-    pushToast({
-      kind: "info",
-      title: "Publish staged",
-      message: "Final publish is intentionally a placeholder until a server-side composition flow exists."
-    });
+    try {
+      const baseFile = dataUrlToFile(draft.baseImageDataUrl, `${draft.id}.png`);
+      assignFile(publishBaseImageInput, baseFile);
+      publishOverlayJsonInput.value = JSON.stringify(draft.payload);
+      publishForm?.submit();
+    } catch (error) {
+      pushToast({
+        kind: "error",
+        title: "Publish blocked",
+        message: error.message
+      });
+    }
   });
 
   function renderDrafts() {
@@ -253,5 +332,33 @@ export function initEditorPage() {
   }
 
   renderDrafts();
-  updateCaptureState();
+  updateActionState();
+}
+
+function assignFile(input, file) {
+  if (!input) {
+    throw new Error("The publish form is unavailable.");
+  }
+
+  const transfer = new DataTransfer();
+  transfer.items.add(file);
+  input.files = transfer.files;
+}
+
+function dataUrlToFile(dataUrl, fileName) {
+  const [header, payload] = dataUrl.split(",", 2);
+  if (!header || !payload) {
+    throw new Error("The stored draft is missing base image data.");
+  }
+
+  const mimeMatch = header.match(/data:(.*?);base64/i);
+  const mimeType = mimeMatch?.[1] ?? "image/png";
+  const binary = atob(payload);
+  const bytes = new Uint8Array(binary.length);
+
+  for (let index = 0; index < binary.length; index += 1) {
+    bytes[index] = binary.charCodeAt(index);
+  }
+
+  return new File([bytes], fileName, { type: mimeType });
 }

@@ -1,0 +1,11 @@
+
+  Determining projects to restore...
+/usr/share/dotnet/sdk/10.0.200/NuGet.targets(196,5): warning : Unable to find a project to restore! [/tmp/camagru/Camagru.slnx]
+
+Build succeeded.
+
+/usr/share/dotnet/sdk/10.0.200/NuGet.targets(196,5): warning : Unable to find a project to restore! [/tmp/camagru/Camagru.slnx]
+    1 Warning(s)
+    0 Error(s)
+
+Time Elapsed 00:00:00.31

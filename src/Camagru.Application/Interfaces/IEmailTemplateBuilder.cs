@@ -7,4 +7,5 @@ public interface IEmailTemplateBuilder
     string BuildPasswordChangedNotification(string username);
     string BuildProfileUpdatedNotification(string username, string changes);
     string BuildWelcomeEmail(string username);
+    string BuildCommentNotification(string recipientUsername, string commenterUsername, string commentText, int postId);
 }

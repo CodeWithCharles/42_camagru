@@ -1,0 +1,15 @@
+@model ResendConfirmationFormViewModel
+
+<form asp-action="ResendConfirmation" method="post" class="c-form c-form--stack">
+    @Html.AntiForgeryToken()
+    <input asp-for="ReturnUrl" type="hidden" />
+    <input asp-for="Origin" type="hidden" />
+
+    <div class="c-field">
+        <label asp-for="Email" class="c-field__label"></label>
+        <input asp-for="Email" class="c-input" autocomplete="email" />
+        <span asp-validation-for="Email" class="c-field__error"></span>
+    </div>
+
+    <button type="submit" class="c-button c-button--ghost c-button--block">Resend confirmation email</button>
+</form>

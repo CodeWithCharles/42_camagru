@@ -1,0 +1,28 @@
+  Determining projects to restore...
+  Restored /tmp/camagru/src/Camagru.Domain/Camagru.Domain.csproj (in 156 ms).
+/tmp/camagru/src/Camagru.Web/Camagru.Web.csproj : warning NU1900: Error occurred while getting package vulnerability data: Unable to load the service index for source https://api.nuget.org/v3/index.json. [/tmp/camagru/Camagru.slnx]
+/tmp/camagru/src/Camagru.Application/Camagru.Application.csproj : warning NU1900: Error occurred while getting package vulnerability data: Unable to load the service index for source https://api.nuget.org/v3/index.json. [/tmp/camagru/Camagru.slnx]
+/tmp/camagru/src/Camagru.Infrastructure/Camagru.Infrastructure.csproj : warning NU1900: Error occurred while getting package vulnerability data: Unable to load the service index for source https://api.nuget.org/v3/index.json. [/tmp/camagru/Camagru.slnx]
+  Restored /tmp/camagru/src/Camagru.Application/Camagru.Application.csproj (in 5.89 sec).
+  Restored /tmp/camagru/src/Camagru.Infrastructure/Camagru.Infrastructure.csproj (in 5.89 sec).
+  Restored /tmp/camagru/src/Camagru.Web/Camagru.Web.csproj (in 5.96 sec).
+/tmp/camagru/src/Camagru.Application/Camagru.Application.csproj : warning NU1900: Error occurred while getting package vulnerability data: Unable to load the service index for source https://api.nuget.org/v3/index.json.
+  Camagru.Domain -> /tmp/camagru/src/Camagru.Domain/bin/Debug/net10.0/Camagru.Domain.dll
+  Camagru.Application -> /tmp/camagru/src/Camagru.Application/bin/Debug/net10.0/Camagru.Application.dll
+/tmp/camagru/src/Camagru.Infrastructure/Camagru.Infrastructure.csproj : warning NU1900: Error occurred while getting package vulnerability data: Unable to load the service index for source https://api.nuget.org/v3/index.json.
+  Camagru.Infrastructure -> /tmp/camagru/src/Camagru.Infrastructure/bin/Debug/net10.0/Camagru.Infrastructure.dll
+/tmp/camagru/src/Camagru.Web/Camagru.Web.csproj : warning NU1900: Error occurred while getting package vulnerability data: Unable to load the service index for source https://api.nuget.org/v3/index.json.
+  Camagru.Web -> /tmp/camagru/src/Camagru.Web/bin/Debug/net10.0/Camagru.Web.dll
+
+Build succeeded.
+
+/tmp/camagru/src/Camagru.Web/Camagru.Web.csproj : warning NU1900: Error occurred while getting package vulnerability data: Unable to load the service index for source https://api.nuget.org/v3/index.json. [/tmp/camagru/Camagru.slnx]
+/tmp/camagru/src/Camagru.Application/Camagru.Application.csproj : warning NU1900: Error occurred while getting package vulnerability data: Unable to load the service index for source https://api.nuget.org/v3/index.json. [/tmp/camagru/Camagru.slnx]
+/tmp/camagru/src/Camagru.Infrastructure/Camagru.Infrastructure.csproj : warning NU1900: Error occurred while getting package vulnerability data: Unable to load the service index for source https://api.nuget.org/v3/index.json. [/tmp/camagru/Camagru.slnx]
+/tmp/camagru/src/Camagru.Application/Camagru.Application.csproj : warning NU1900: Error occurred while getting package vulnerability data: Unable to load the service index for source https://api.nuget.org/v3/index.json.
+/tmp/camagru/src/Camagru.Infrastructure/Camagru.Infrastructure.csproj : warning NU1900: Error occurred while getting package vulnerability data: Unable to load the service index for source https://api.nuget.org/v3/index.json.
+/tmp/camagru/src/Camagru.Web/Camagru.Web.csproj : warning NU1900: Error occurred while getting package vulnerability data: Unable to load the service index for source https://api.nuget.org/v3/index.json.
+    6 Warning(s)
+    0 Error(s)
+
+Time Elapsed 00:00:20.69

@@ -1,6 +1,6 @@
 using System.Security.Claims;
-using Camagru.Domain.Entities;
-using Camagru.Domain.Interfaces;
+using Camagru.Application.Contracts.Posts;
+using Camagru.Application.UseCases.Posts;
 using Camagru.Web.Models.Gallery;
 using Camagru.Web.Models.Shared;
 using Microsoft.AspNetCore.Authorization;
@@ -12,11 +12,24 @@ namespace Camagru.Web.Controllers;
 public class GalleryController : Controller
 {
     private const int PageSize = 6;
-    private readonly IPostRepository _postRepository;
+    private readonly ListGalleryPostsUseCase _listGalleryPostsUseCase;
+    private readonly GetPostDetailsUseCase _getPostDetailsUseCase;
+    private readonly ToggleLikeUseCase _toggleLikeUseCase;
+    private readonly AddCommentUseCase _addCommentUseCase;
+    private readonly DeletePostUseCase _deletePostUseCase;
 
-    public GalleryController(IPostRepository postRepository)
+    public GalleryController(
+        ListGalleryPostsUseCase listGalleryPostsUseCase,
+        GetPostDetailsUseCase getPostDetailsUseCase,
+        ToggleLikeUseCase toggleLikeUseCase,
+        AddCommentUseCase addCommentUseCase,
+        DeletePostUseCase deletePostUseCase)
     {
-        _postRepository = postRepository;
+        _listGalleryPostsUseCase = listGalleryPostsUseCase;
+        _getPostDetailsUseCase = getPostDetailsUseCase;
+        _toggleLikeUseCase = toggleLikeUseCase;
+        _addCommentUseCase = addCommentUseCase;
+        _deletePostUseCase = deletePostUseCase;
     }
 
     [HttpGet("")]
@@ -28,8 +41,20 @@ public class GalleryController : Controller
             return RedirectToAction(nameof(Index), new { page = 1 });
         }
 
-        var (posts, totalCount) = await _postRepository.GetPagedGalleryAsync(page, PageSize);
-        if (totalCount == 0)
+        var currentUserId = TryGetCurrentUserId();
+        var listResult = await _listGalleryPostsUseCase.ExecuteAsync(new ListGalleryPostsRequest
+        {
+            Page = page,
+            PageSize = PageSize,
+            ViewerUserId = currentUserId
+        });
+
+        if (!listResult.Success || listResult.Data == null)
+        {
+            return RedirectToAction("Status", "Errors", new { statusCode = 500 });
+        }
+
+        if (listResult.Data.TotalCount == 0)
         {
             return View("Empty", new EmptyGalleryViewModel
             {
@@ -45,30 +70,40 @@ public class GalleryController : Controller
             });
         }
 
-        var totalPages = (int)Math.Ceiling(totalCount / (double)PageSize);
+        var totalPages = (int)Math.Ceiling(listResult.Data.TotalCount / (double)PageSize);
         if (page > totalPages)
         {
             return RedirectToAction("Status", "Errors", new { statusCode = 404 });
         }
 
-        var currentUserId = TryGetCurrentUserId();
-        var selectedPost = postId.HasValue ? await _postRepository.GetByIdWithDetailsAsync(postId.Value) : null;
-        if (postId.HasValue && selectedPost == null)
+        GalleryPostDetailsDto? selectedPost = null;
+        if (postId.HasValue)
         {
-            return RedirectToAction("Status", "Errors", new { statusCode = 404 });
+            var postDetailsResult = await _getPostDetailsUseCase.ExecuteAsync(new GetPostDetailsRequest
+            {
+                PostId = postId.Value,
+                ViewerUserId = currentUserId
+            });
+
+            if (!postDetailsResult.Success || postDetailsResult.Data == null)
+            {
+                return RedirectToAction("Status", "Errors", new { statusCode = 404 });
+            }
+
+            selectedPost = postDetailsResult.Data;
         }
 
         var model = new GalleryIndexViewModel
         {
             CurrentPage = page,
-            TotalItems = totalCount,
+            TotalItems = listResult.Data.TotalCount,
             IsAuthenticated = User.Identity?.IsAuthenticated ?? false,
             LoginUrl = Url.Action("Login", "Auth", new
             {
                 returnUrl = Url.Action(nameof(Index), new { page, postId })
             }) ?? "/Auth/Login",
-            Posts = posts.Select(post => MapCard(post, page, currentUserId)).ToList(),
-            ActivePost = selectedPost == null ? null : MapModal(selectedPost, page, currentUserId),
+            Posts = listResult.Data.Posts.Select(post => MapCard(post, page)).ToList(),
+            ActivePost = selectedPost == null ? null : MapModal(selectedPost, page),
             Pagination = BuildPagination(page, totalPages)
         };
 
@@ -80,12 +115,27 @@ public class GalleryController : Controller
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Like(GalleryInteractionInputModel input)
     {
-        if (!await _postRepository.ExistsAsync(input.PostId))
+        var userId = TryGetCurrentUserId();
+        if (!userId.HasValue)
         {
-            return RedirectToAction("Status", "Errors", new { statusCode = 404 });
+            return RedirectToAction("Login", "Auth", new { returnUrl = input.ReturnUrl });
         }
 
-        TempData["Toast.Info"] = "Likes are visible in the UI, but persistence is not wired yet.";
+        var result = await _toggleLikeUseCase.ExecuteAsync(new ToggleLikeRequest
+        {
+            PostId = input.PostId,
+            UserId = userId.Value
+        });
+
+        if (!result.Success)
+        {
+            return RedirectToAction("Status", "Errors", new
+            {
+                statusCode = string.Equals(result.Error, "Post not found", StringComparison.OrdinalIgnoreCase) ? 404 : 403
+            });
+        }
+
+        TempData["Toast.Success"] = result.Data?.IsLiked == true ? "Post liked." : "Like removed.";
         return RedirectToLocal(input.ReturnUrl);
     }
 
@@ -94,14 +144,32 @@ public class GalleryController : Controller
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Comment(GalleryInteractionInputModel input)
     {
-        if (!await _postRepository.ExistsAsync(input.PostId))
+        var userId = TryGetCurrentUserId();
+        if (!userId.HasValue)
         {
-            return RedirectToAction("Status", "Errors", new { statusCode = 404 });
+            return RedirectToAction("Login", "Auth", new { returnUrl = input.ReturnUrl });
         }
 
-        TempData["Toast.Info"] = string.IsNullOrWhiteSpace(input.Comment)
-            ? "Add a message before sending a placeholder comment."
-            : "Comment persistence and email notifications are planned, but not wired yet.";
+        var result = await _addCommentUseCase.ExecuteAsync(new AddCommentRequest
+        {
+            PostId = input.PostId,
+            UserId = userId.Value,
+            Text = input.Comment ?? string.Empty
+        });
+
+        if (!result.Success)
+        {
+            if (string.Equals(result.Error, "Post not found", StringComparison.OrdinalIgnoreCase))
+            {
+                return RedirectToAction("Status", "Errors", new { statusCode = 404 });
+            }
+
+            TempData["Toast.Error"] = result.Error ?? "Comment submission failed.";
+            return RedirectToLocal(input.ReturnUrl);
+        }
+
+        TempData[result.Data?.WarningMessage == null ? "Toast.Success" : "Toast.Info"] =
+            result.Data?.WarningMessage ?? "Comment posted.";
 
         return RedirectToLocal(input.ReturnUrl);
     }
@@ -111,24 +179,28 @@ public class GalleryController : Controller
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Delete(GalleryInteractionInputModel input)
     {
-        var post = await _postRepository.GetByIdAsync(input.PostId);
-        if (post == null)
+        var userId = TryGetCurrentUserId();
+        if (!userId.HasValue)
         {
-            return RedirectToAction("Status", "Errors", new { statusCode = 404 });
+            return RedirectToAction("Login", "Auth", new { returnUrl = input.ReturnUrl });
         }
 
-        var currentUserId = TryGetCurrentUserId();
-        if (!currentUserId.HasValue || post.UserId != currentUserId.Value)
+        var result = await _deletePostUseCase.ExecuteAsync(new DeletePostRequest
         {
-            return RedirectToAction("Status", "Errors", new { statusCode = 403 });
-        }
-
-        return RedirectToAction("FeatureNotReady", "Errors", new
-        {
-            feature = "server-side post deletion",
-            missingContract = "DeletePostUseCase",
-            returnUrl = input.ReturnUrl
+            PostId = input.PostId,
+            RequestingUserId = userId.Value
         });
+
+        if (!result.Success)
+        {
+            return RedirectToAction("Status", "Errors", new
+            {
+                statusCode = string.Equals(result.Error, "Post not found", StringComparison.OrdinalIgnoreCase) ? 404 : 403
+            });
+        }
+
+        TempData["Toast.Success"] = "Post deleted.";
+        return RedirectToAction(nameof(Index), new { page = input.Page < 1 ? 1 : input.Page });
     }
 
     [HttpGet("Empty")]
@@ -167,50 +239,50 @@ public class GalleryController : Controller
         };
     }
 
-    private GalleryPostCardViewModel MapCard(Post post, int currentPage, int? currentUserId)
+    private GalleryPostCardViewModel MapCard(GalleryPostSummaryDto post, int currentPage)
     {
-        var authorName = string.IsNullOrWhiteSpace(post.User.DisplayName) ? post.User.Username : post.User.DisplayName!;
         return new GalleryPostCardViewModel
         {
             Id = post.Id,
-            AuthorName = authorName,
-            AuthorHandle = $"@{post.User.Username}",
-            Description = string.IsNullOrWhiteSpace(post.Description) ? "No caption provided." : post.Description,
-            CoverImageUrl = post.Images.OrderBy(image => image.DisplayOrder).Select(image => image.FilePath).FirstOrDefault() ?? "/images/mock-gallery/orbit-01.svg",
+            AuthorName = post.AuthorName,
+            AuthorHandle = $"@{post.AuthorUsername}",
+            Description = post.Description,
+            CoverImageUrl = post.ImageUrls.FirstOrDefault() ?? "/images/mock-gallery/orbit-01.svg",
             CreatedLabel = post.CreatedAt.ToString("dd MMM yyyy"),
-            LikeCount = post.Likes.Count,
-            CommentCount = post.Comments.Count,
-            ImageCount = post.Images.Count,
+            LikeCount = post.LikeCount,
+            CommentCount = post.CommentCount,
+            ImageCount = post.ImageUrls.Count,
             OpenUrl = Url.Action(nameof(Index), new { page = currentPage, postId = post.Id }) ?? $"/Gallery?page={currentPage}&postId={post.Id}",
-            IsOwnedByCurrentUser = currentUserId.HasValue && currentUserId.Value == post.UserId
+            IsOwnedByCurrentUser = post.IsOwnedByViewer,
+            IsLikedByCurrentUser = post.IsLikedByViewer
         };
     }
 
-    private GalleryPostModalViewModel MapModal(Post post, int currentPage, int? currentUserId)
+    private GalleryPostModalViewModel MapModal(GalleryPostDetailsDto post, int currentPage)
     {
-        var authorName = string.IsNullOrWhiteSpace(post.User.DisplayName) ? post.User.Username : post.User.DisplayName!;
         return new GalleryPostModalViewModel
         {
             Id = post.Id,
-            AuthorName = authorName,
-            AuthorHandle = $"@{post.User.Username}",
-            Description = string.IsNullOrWhiteSpace(post.Description) ? "No caption provided." : post.Description,
+            AuthorName = post.AuthorName,
+            AuthorHandle = $"@{post.AuthorUsername}",
+            Description = post.Description,
             CreatedLabel = post.CreatedAt.ToString("dd MMM yyyy 'at' HH:mm"),
-            ImageUrls = post.Images.OrderBy(image => image.DisplayOrder).Select(image => image.FilePath).ToList(),
+            ImageUrls = post.ImageUrls,
             Comments = post.Comments
-                .OrderByDescending(comment => comment.CreatedAt)
                 .Select(comment => new GalleryCommentViewModel
                 {
-                    AuthorName = string.IsNullOrWhiteSpace(comment.User.DisplayName) ? comment.User.Username : comment.User.DisplayName!,
-                    AuthorHandle = $"@{comment.User.Username}",
+                    AuthorName = comment.AuthorName,
+                    AuthorHandle = $"@{comment.AuthorUsername}",
                     Content = comment.Content,
                     CreatedLabel = comment.CreatedAt.ToString("dd MMM yyyy 'at' HH:mm")
                 })
                 .ToList(),
-            LikeCount = post.Likes.Count,
-            CommentCount = post.Comments.Count,
+            LikeCount = post.LikeCount,
+            CommentCount = post.CommentCount,
             IsAuthenticated = User.Identity?.IsAuthenticated ?? false,
-            IsOwnedByCurrentUser = currentUserId.HasValue && currentUserId.Value == post.UserId,
+            IsOwnedByCurrentUser = post.IsOwnedByViewer,
+            IsLikedByCurrentUser = post.IsLikedByViewer,
+            CurrentPage = currentPage,
             CloseUrl = Url.Action(nameof(Index), new { page = currentPage }) ?? $"/Gallery?page={currentPage}",
             ShareUrl = Url.Action(nameof(Index), "Gallery", new { page = currentPage, postId = post.Id }) ?? $"/Gallery?page={currentPage}&postId={post.Id}",
             LoginUrl = Url.Action("Login", "Auth", new

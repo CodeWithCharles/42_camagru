@@ -5,14 +5,15 @@
         <div>
             <span class="c-eyebrow">Stage</span>
             <h1>Montage editor</h1>
-            <p>Webcam and upload flows are client-only previews for now. Publish remains intentionally staged as a placeholder.</p>
+            <p>Webcam and upload flows stay interactive in-browser, then Publish submits the base image and overlay payload for server-side composition.</p>
         </div>
         <div class="p-editor__workspace-actions">
             <button type="button" class="c-button c-button--ghost" data-start-camera>Start webcam</button>
             <button type="button" class="c-button c-button--ghost" data-stop-camera disabled>Stop webcam</button>
-            <label class="c-button c-button--ghost p-editor__upload-trigger" for="editor-upload">Upload image</label>
-            <input id="editor-upload" type="file" accept="image/png,image/jpeg,image/webp" hidden data-editor-upload />
+            <label class="c-button c-button--ghost p-editor__upload-trigger" for="editor-upload" data-upload-trigger tabindex="-1">Upload image</label>
+            <input id="editor-upload" type="file" accept="image/png,image/jpeg" hidden data-editor-upload />
         </div>
+        <p class="p-editor__camera-note" data-camera-fallback-note hidden tabindex="-1" aria-live="polite"></p>
     </div>
 
     <div class="c-editor-stage" data-editor-stage>
@@ -29,11 +30,34 @@
 
     <div class="p-editor__status-row">
         <div class="c-inline-alert">
-            <strong>Preview export only.</strong>
+            <strong>Preview plus publish pipeline.</strong>
             <span>@Model.PreviewNote</span>
         </div>
         <button type="button" class="c-button c-button--primary" data-export-capture disabled>Capture preview</button>
     </div>
+
+    <form action="@Model.PublishActionUrl"
+          method="post"
+          enctype="multipart/form-data"
+          class="c-form c-form--stack p-editor__publish-form"
+          data-publish-form>
+        @Html.AntiForgeryToken()
+        <input type="file" name="BaseImage" hidden data-publish-base-image />
+        <input type="hidden" name="OverlayPayloadJson" data-publish-overlay-json />
+
+        <div class="c-field">
+            <label class="c-field__label" for="editor-description">Caption</label>
+            <textarea id="editor-description"
+                      class="c-input c-input--multiline"
+                      name="Description"
+                      rows="3"
+                      maxlength="2000"
+                      placeholder="Add a short caption before publishing to the public gallery."
+                      data-publish-description>@Model.Description</textarea>
+        </div>
+
+        <button type="submit" class="c-button c-button--primary" data-submit-publish disabled>Publish to gallery</button>
+    </form>
 
     <div class="p-editor__preview-panel">
         <div class="p-editor__preview-frame">

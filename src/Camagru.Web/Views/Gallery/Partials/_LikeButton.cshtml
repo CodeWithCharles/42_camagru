@@ -1,0 +1,11 @@
+@model GalleryLikeButtonViewModel
+
+<form action="@Model.ActionUrl" method="post" class="c-inline-form">
+    @Html.AntiForgeryToken()
+    <input type="hidden" name="PostId" value="@Model.PostId" />
+    <input type="hidden" name="Page" value="@Model.Page" />
+    <input type="hidden" name="ReturnUrl" value="@Model.ReturnUrl" />
+    <button type="submit" class="c-button @(Model.IsLikedByCurrentUser ? "c-button--ghost" : "c-button--primary")">
+        @(Model.IsLikedByCurrentUser ? "Unlike" : "Like")
+    </button>
+</form>

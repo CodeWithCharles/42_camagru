@@ -35,7 +35,8 @@ public class PostRepository : IPostRepository
 		return await _context.Posts
 			.Include(p => p.User)
 			.Include(p => p.Images)
-			.OrderByDescending(p => p.Id)
+			.OrderByDescending(p => p.CreatedAt)
+			.ThenByDescending(p => p.Id)
 			.ToListAsync();
 	}
 
@@ -44,7 +45,8 @@ public class PostRepository : IPostRepository
 		return await _context.Posts
 			.Include(p => p.Images)
 			.Where(p => p.UserId == userId)
-			.OrderByDescending(p => p.Id)
+			.OrderByDescending(p => p.CreatedAt)
+			.ThenByDescending(p => p.Id)
 			.ToListAsync();
 	}
 
@@ -57,7 +59,8 @@ public class PostRepository : IPostRepository
 			.Include(p => p.Images)
 			.Include(p => p.Comments)
 			.Include(p => p.Likes)
-			.OrderByDescending(p => p.Id)
+			.OrderByDescending(p => p.CreatedAt)
+			.ThenByDescending(p => p.Id)
 			.Skip((pageNumber - 1) * pageSize)
 			.Take(pageSize)
 			.ToListAsync();

@@ -1,0 +1,9 @@
+@model GalleryDeletePostButtonViewModel
+
+<form action="@Model.ActionUrl" method="post">
+    @Html.AntiForgeryToken()
+    <input type="hidden" name="PostId" value="@Model.PostId" />
+    <input type="hidden" name="Page" value="@Model.Page" />
+    <input type="hidden" name="ReturnUrl" value="@Model.ReturnUrl" />
+    <button type="submit" class="c-button c-button--danger">Delete my post</button>
+</form>
